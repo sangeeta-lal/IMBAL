@@ -20,7 +20,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 //****************************************************************************
 //This file will be used to create  method call from a given fragment of code
-//****************************************************************************
+//*****************************************************************************
 public class MethodCallPrinterClass
 {
 	String method_call_names = "";
