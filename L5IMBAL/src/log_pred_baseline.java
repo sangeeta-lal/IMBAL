@@ -34,9 +34,9 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 /*
  * @Author: Sangeeta
- * 1. This is the simple log prediction code that is used to predict cross project log prediction using simple LogOpt method
+ * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * */
-public class within_log_pred
+public class log_pred_baseline
 {
 
 	/*
@@ -57,7 +57,7 @@ public class within_log_pred
 	//*/
 	 
 
-	int iterations=10;	
+	int iterations=1;	
 	String type = "catch";
 	//String type ="if";
 
@@ -66,12 +66,12 @@ public class within_log_pred
 	//String source_project="hd";
 	
 	
-	String db_name ="logging4_elp";
-	String result_table = "within_log_pred_"+type;
+	String db_name ="logging5_imbal";
+	String result_table = "pred_result_baseline_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
-   	String source_file_path = path+"L4ELP\\dataset\\"+source_project+"-arff\\"+type+"\\balance\\"+source_project+"_"+type+"_balance";
+   	//String source_file_path = path+"L5IMBAL\\dataset\\"+source_project+"-arff\\"+type+"\\balance\\"+source_project+"_"+type+"_balance";
 		
 	//DataSource trainsource;
 	DataSource all_data_source;
@@ -307,7 +307,7 @@ public static void main(String args[])
 			  					new NaiveBayes()};
 			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
 	 
-		within_log_pred clp = new within_log_pred();
+		log_pred_baseline clp = new log_pred_baseline();
 		
 		
 		// Length of models

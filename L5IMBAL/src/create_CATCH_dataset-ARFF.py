@@ -37,8 +37,8 @@ password="1234"
 database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "F:\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\catch\\train\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
-test_file_path = path+ project+"-arff\\catch\\test\\"+project+"_test.arff"
+train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
+test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
 """
 
 port=3307
