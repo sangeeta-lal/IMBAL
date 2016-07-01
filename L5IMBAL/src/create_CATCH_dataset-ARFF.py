@@ -47,8 +47,8 @@ password="sangeetal"
 database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\catch\\complete\\"+project+"_catch_complete.arff"
-test_file_path = path+ project+"-arff\\catch\\balance\\"+project+"_catch_balance"
+train_file_path=path+project+"-arff\\catch\\train\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
+test_file_path = path+ project+"-arff\\catch\\test\\"+project+"_test.arff"
 #"""
 
 
