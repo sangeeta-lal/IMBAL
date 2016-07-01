@@ -52,7 +52,6 @@ test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
 #"""
 
 
-
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
 select_cursor = db1.cursor()
 insert_cursor = db1.cursor()

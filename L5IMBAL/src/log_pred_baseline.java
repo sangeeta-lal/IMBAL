@@ -40,7 +40,7 @@ public class log_pred_baseline
 {
 
 	/*
-	 String path = "E:\\Sangeeta\\Research\\";
+	 String path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
 	 String url = "jdbc:mysql://localhost:3307/";
@@ -49,7 +49,7 @@ public class log_pred_baseline
 	// */
 	
 	///*
-	String path = "F:\\Research\\";
+	String path = "F:\\Research\\L5IMBAL\\dataset\\";
 	String user_name =  "root";
 	String password = "1234";
 	String url = "jdbc:mysql://localhost:3306/";
@@ -67,21 +67,24 @@ public class log_pred_baseline
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "pred_result_baseline_"+type;
+	String result_table = "result_baseline_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
-   	//String source_file_path = path+"L5IMBAL\\dataset\\"+source_project+"-arff\\"+type+"\\balance\\"+source_project+"_"+type+"_balance";
+   	String train_file_path = path+source_project+"-arff"+"\\" +type+"\\train";
+   	String test_file_path = path +source_project +"-arff"+"\\"+type+"\\test";
 		
 	//DataSource trainsource;
-	DataSource all_data_source;
-	Instances all_data;
-			
+	DataSource train_data_source;
+	DataSource test_data_source;
+	
 	Instances trains;
 	Instances tests;
+	
 	Evaluation result;
 		
-	int instance_count_source = 0;
+	int instance_count_train = 0;
+	int instance_count_test= 0;
 	 
 
 	//Connection conn=null;	
@@ -95,14 +98,21 @@ public class log_pred_baseline
 		try 
 			{
 			
-				all_data_source = new DataSource(source_file_path+"_"+i+".arff");
-				all_data = all_data_source.getDataSet();
-				all_data.setClassIndex(0);	
+				train_data_source = new DataSource(train_file_path+"_"+i+"\\k1\\"+source_project+"_train.arff");
+				System.out.println("File path = "+ train_file_path+"_"+i+"\\k1\\"+source_project+"_train.arff");
+				trains = train_data_source.getDataSet();
+				trains.setClassIndex(0);
 				
-				instance_count_source = all_data.numInstances();
 				
+				test_data_source = new DataSource(test_file_path+"_"+i+"\\"+source_project+"_test.arff");
+				tests = test_data_source.getDataSet();
+				tests.setClassIndex(0);	
+								
 				
-				System.out.println("Instance count source ="+ instance_count_source);// + "  Instance count target="+ instance_count_target);
+				instance_count_train = trains.numInstances();
+				instance_count_test = tests.numInstances();
+				
+				System.out.println("Instance count Train ="+ instance_count_train+"   Instance count Test="+ instance_count_test);// + "  Instance count target="+ instance_count_target);
 		    
 			} catch (Exception e) 
 			{
@@ -123,18 +133,26 @@ public void pre_process_data()
 			   //1. TF-IDF
 			  StringToWordVector tfidf_filter = new StringToWordVector();
 			  tfidf_filter.setIDFTransform(true);
-			  tfidf_filter.setInputFormat(all_data);
-	     	  all_data = Filter.useFilter(all_data, tfidf_filter);     	  
+			  tfidf_filter.setInputFormat(trains);
+	     	  trains = Filter.useFilter(trains, tfidf_filter);  
+	     	  
+	     	 tests = Filter.useFilter(tests, tfidf_filter);
+	     	  
 
 	 	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
 	     	  Standardize  std_filter =  new Standardize();
-	     	  std_filter.setInputFormat(all_data);
-	     	  all_data= Filter.useFilter(all_data,std_filter);     	  
+	     	  std_filter.setInputFormat(trains);
+	     	  trains= Filter.useFilter(trains,std_filter);  
+	     	  
+	     	  tests =  Filter.useFilter(tests, std_filter);
 	     	
 	 	     //3. Discretizations
-	     	  Discretize dfilter = new Discretize();
-		      dfilter.setInputFormat(all_data);
-		      all_data = Filter.useFilter(all_data, dfilter);
+	     	 // Discretize dfilter = new Discretize();
+		      //dfilter.setInputFormat(trains);
+		     // trains = Filter.useFilter(trains, dfilter);
+		      
+		      //tests = Filter.useFilter(tests, dfilter);
+		      
 		
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -143,8 +161,8 @@ public void pre_process_data()
 
 }
 	
-
-//This method will divide the data in =to two parts: Train and Test
+/*
+//This method will divide the data in =to two parts: Not used i this work
 public void create_train_and_test_split(double train_size, double test_size) 
 {
 	all_data.randomize(new java.util.Random(0));
@@ -153,7 +171,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 	trains = new Instances(all_data, 0, trainSize);
 	tests = new Instances(all_data, trainSize, testSize);
 
-}
+}*/
 
 
 // This function is used to train and test a using a given classifier
@@ -226,7 +244,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 		double std_roc_auc = 0.0;
 		//double total_instances = 0.0;
 		
-		util4_met  ut = new util4_met();
+		util5_met  ut = new util5_met();
 		
 		avg_precision   = ut.compute_mean(precision);
 		avg_recall      = ut.compute_mean(recall);
@@ -278,7 +296,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 	       ArffSaver saver = new ArffSaver();
            saver.setInstances(trains);
        
-		   saver.setFile(new File("F:\\result\\tom_idf.arff"));
+		   saver.setFile(new File("F:\\result\\logging5_imbal_logg_pred_baseline.arff"));
 		
 		   saver.writeBatch();
 	
@@ -296,16 +314,9 @@ public static void main(String args[])
 	{
 	
 	  
-	  Classifier models [] = {  new Logistic(),
-			  					new BayesNet(),
-			  					new RBFNetwork(),			  					
-			  					new ADTree(),
-			  					new DecisionTable(),
-			  					new AdaBoostM1(),
-			  					new J48(),  //Decision Tree
-			  					new RandomForest(),
-			  					new NaiveBayes()};
-			  					//new MultilayerPerceptron()}; //removed because of high computational requirement
+	  Classifier models [] = {  new RandomForest(),
+			                    new Logistic(),
+			  					new J48()};
 	 
 		log_pred_baseline clp = new log_pred_baseline();
 		
@@ -328,7 +339,6 @@ public static void main(String args[])
 				    clp.read_file(i+1);
 				   
 					clp.pre_process_data();
-					clp.create_train_and_test_split(0.7,0.3);
 					
 					clp.result = clp.cross_pred(models[j]);				
 					
@@ -336,21 +346,7 @@ public static void main(String args[])
 					recall[i]            =   clp.result.recall(1)*100;
 					accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
 					fmeasure[i]          =   clp.result.fMeasure(1)*100;
-					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;
-					
-					
-					 // Alternative way to compute all the metrics mannually
-				   /* util4_met ut_obj=  new util4_met();
-					FastVector pred_1_db = clp.result.predictions();
-					precision[i]         = ut_obj.compute_precision(pred_1_db);
-					recall[i]            = ut_obj.compute_recall(pred_1_db);
-					accuracy[i]          = ut_obj.compute_accuracy(pred_1_db);
-					fmeasure[i]          = ut_obj.compute_fmeasure(pred_1_db);
-					roc_auc[i]           = ut_obj.compute_roc_auc(pred_1_db);//*/
-			
-					
-					//@ Un comment to see the evalauation results
-					//System.out.println(clp.result.toSummaryString());				
+					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;			
 					
 						
 				}
