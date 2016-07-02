@@ -39,7 +39,11 @@ main_source_table = project+"_catch_training5"  # from this table we have to tak
 path = "F:\\Research\\L5IMBAL\\dataset\\"
 train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
 test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
+
+#logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\logged_indices.txt"
+#non_logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\non_logged_indices.txt"
 """
+
 
 port=3307
 user="sangeetal"
@@ -51,11 +55,14 @@ train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"
 test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
 #"""
 
-
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
 select_cursor = db1.cursor()
 insert_cursor = db1.cursor()
+logged_train_indices = list()
+non_logged_train_indices= list()
 
+logged_test_indices = list()
+non_logged_test_indices = list()
 
 
 #=======================================================#
@@ -196,7 +203,7 @@ def write_in_file(file_obj, tuple_val):
     
     text_features =  text_features.strip()
     
-    print "writing try id=", try_id
+    #print "writing try id=", try_id   #Note: Uncomment to see which ids its writing
     
     #====Insert the data in the table=====#
     write_str =  ""+ (str)(is_catch_logged) +","+ (str)(n_try_loc) +","+ (str)(n_is_try_logged)  +","+ (str)(n_try_log_count)\
@@ -216,10 +223,22 @@ def write_in_file(file_obj, tuple_val):
     #db1.commit()           
     
     
+#=====================================================#
+#  This function is used to creat indices 
+#=====================================================#
+def write_indices_in_file(indices, indices_file_path):
+    file_obj =  open(indices_file_path, 'w+')
+    for i in indices:
+        file_obj.write((str)(i)+ "\n")
+        
+    file_obj.close();    
+        
 
-
-def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
-    #===========Read all the catch blocks===============================#
+#=====================================================================#
+#  This function will read all the logged catch blocks                #
+#=====================================================================#    
+def read_logged_data():
+    #===========Read the logged catch blocks===============================#
     str_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
                        throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
@@ -227,14 +246,21 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=1"
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=1 limit 0, 20"
    
 
     select_cursor.execute(str_logged_data)
     logged_data = select_cursor.fetchall()
     
-    
-    
+    return logged_data
+
+
+
+#==========================================================================#
+#  This function will read all the non logged catch blocks                 #
+#==========================================================================#    
+def read_non_logged_data():
+    #===========Read the non logged catch blocks===============================#
     str_non_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
                        throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
@@ -242,11 +268,102 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=0"
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=0 limit 0, 20"
    
 
     select_cursor.execute(str_non_logged_data)
     non_logged_data = select_cursor.fetchall()
+    
+    return non_logged_data
+        
+#=========================================================================#
+#  This function creates an array having  size of each of the subset      #
+#=========================================================================#
+def compute_subset_size_array(total_data_points, no_of_subsets):
+    
+    size_list  = list()
+    size= total_data_points/no_of_subsets
+    
+    i=1
+    data_points_added = 0
+    while i<no_of_subsets:
+        size_list.append(size)
+        data_points_added = data_points_added + size
+        i=i+1
+        
+    remaining_data_points = total_data_points -data_points_added
+    size_list.append(remaining_data_points)    
+    
+    return size_list
+
+#=========================================================================#
+#  This function creates an subsets from the training dataset             #
+#=========================================================================#
+def create_train_subsets_k(k, logged_size_array, non_logged_size_array, logged_train_indices, non_logged_test_indices,  logged_data, non_logged_data):
+    
+    j=0
+    
+    logged_start = 0
+    logged_end   = 0
+    
+    non_logged_start = 0
+    non_logged_end   = 0
+    
+    while(j<k):
+        
+        print "\n K=", j+1
+        
+        
+        logged_start = logged_end
+        logged_end   = logged_end+ logged_size_array[j]
+    
+        non_logged_start = non_logged_end
+        non_logged_end   = non_logged_end + non_logged_size_array[j]
+    
+        
+        logged_sub_train_indices = logged_train_indices[logged_start:logged_end] 
+        non_logged_sub_train_indices = non_logged_train_indices[non_logged_start:non_logged_end]   
+        
+        print " Logged subset =", j, "  th train indices= ", logged_sub_train_indices
+        print " Non Logged subset =", j, "  th train indices= ", non_logged_sub_train_indices
+        
+        
+        train_subset_file_path  = path + project+"-arff\\catch\\train_1\\k"+(str)(k)+"\\"+project+"_train_sub_"+(str)(j+1)+".arff"
+        
+        file_sub_train =  open(train_subset_file_path, 'w+')
+    
+   
+        # 1. Write header in the file
+        train_subset_relation_name =  project +"_catch_train_subset_"+(str)(j+1)
+        write_header(file_sub_train, train_subset_relation_name)
+        
+        valid_index=-1
+        for d in logged_data:
+            valid_index= valid_index+1
+            if valid_index in logged_sub_train_indices: 
+                write_in_file(file_sub_train, d)   
+        
+        valid_index=-1
+        for d in non_logged_data:
+            valid_index= valid_index+1
+            if valid_index in non_logged_sub_train_indices: 
+                write_in_file(file_sub_train, d)  
+                
+        file_sub_train.close()
+            
+        #logged_start = logged_end
+        #logged_end  = logged_end +   logged_size_array[j]
+         
+        #non_logged_start = non_logged_end
+        #non_logged_end  = non_logged_end +   non_logged_size_array[j]
+        
+        j=j+1 
+    
+    
+def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
+
+    logged_data = read_logged_data()   
+    non_logged_data = read_non_logged_data()
 
     
     #===============================================================#
@@ -273,8 +390,16 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
     logged_indices = np.random.permutation(len(logged_data))
     logged_per_70  = (total_logged_data_points * 70)/100
     logged_per_30 = total_logged_data_points-logged_per_70    
-    logged_train_indices = logged_indices[:logged_per_70]
+    
+    global logged_train_indices 
+    logged_train_indices= logged_indices[:logged_per_70]
+    
+    global logged_test_indices
     logged_test_indices= logged_indices[-logged_per_30:]
+    
+    #============ Write training indices (logged) in file for ensemble creation=======#
+    # write_indices_in_file(logged_train_indices, logged_indices_file_path)  # Not required
+    #=========================================================================#
     
     print "len logged tuples=", len(logged_data),  "per_70=", logged_per_70, "  per_30=", logged_per_30    
     print " all indices = ", logged_indices
@@ -299,15 +424,22 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
     # Create one complete  train and test database (non logged data)   
     #===============================================================#
    
-    non_logged_train_indices = list()
-    non_logged_test_indices = list()
+    #non_logged_train_indices = list()
+    #non_logged_test_indices = list()
     
     total_non_logged_data_points =  len(non_logged_data)
     non_logged_indices = np.random.permutation(len(non_logged_data))
     non_logged_per_70  = (total_non_logged_data_points * 70)/100
     non_logged_per_30 = total_non_logged_data_points-non_logged_per_70    
+   
+    global non_logged_train_indices 
     non_logged_train_indices = non_logged_indices[:non_logged_per_70]
-    non_logged_test_indices= non_logged_indices[-non_logged_per_30:]
+    global non_logged_test_indices
+    non_logged_test_indices = non_logged_indices[-non_logged_per_30:]
+   
+    #============ Write training indices (non-logged) in file for ensemble creation=======#
+    # write_indices_in_file(non_logged_train_indices, non_logged_indices_file_path)  # Not required
+    #====================================================================================#
     
     print "len non logged tuples=", len(non_logged_data),  "non logged per_70=", non_logged_per_70, " non logged  per_30=", non_logged_per_30    
     print " all indices (non logged) = ", non_logged_indices
@@ -332,6 +464,29 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
     file_test.close()
     
     
+#==================================================================================#
+#  This function will bes used to create subsets of training dataset for ensemble 
+#  creation
+#==================================================================================#
+def create_train_data_set_for_different_k(a,b):
+    i=a
+    j=b
+    
+    while(i<=j):
+        print i
+        
+        logged_data =  read_logged_data()
+        non_logged_data =  read_non_logged_data()
+        
+        logged_per_70       =   (len(logged_data) * 70)/100
+        non_logged_per_70   =   (len(non_logged_data) * 70)/100
+        logged_size_array   =   compute_subset_size_array(logged_per_70, i)
+        non_logged_size_array =  compute_subset_size_array(non_logged_per_70, i)
+        print "logged size array=", logged_size_array, " non logged size array=", non_logged_size_array, "logged train indices=", logged_train_indices, "  non logged train indices=", non_logged_train_indices
+        
+        create_train_subsets_k(i, logged_size_array, non_logged_size_array, logged_train_indices, non_logged_test_indices,  logged_data, non_logged_data)
+
+        i=i+1
     
 """    
 
@@ -414,5 +569,5 @@ def create_10_small_balance_files():
 
 
 create_complete_train_and_test_file_logged(train_file_path, test_file_path)
-#create_10_small_balance_files()
+create_train_data_set_for_different_k(2,10)
 

@@ -99,7 +99,7 @@ public class log_pred_baseline
 			{
 			
 				train_data_source = new DataSource(train_file_path+"_"+i+"\\k1\\"+source_project+"_train.arff");
-				System.out.println("File path = "+ train_file_path+"_"+i+"\\k1\\"+source_project+"_train.arff");
+				//System.out.println("File path = "+ train_file_path+"_"+i+"\\k1\\"+source_project+"_train.arff");
 				trains = train_data_source.getDataSet();
 				trains.setClassIndex(0);
 				
