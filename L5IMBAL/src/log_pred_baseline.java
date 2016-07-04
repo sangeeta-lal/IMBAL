@@ -21,6 +21,7 @@ import weka.classifiers.trees.ADTree;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.FastVector;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -175,7 +176,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 
 
 // This function is used to train and test a using a given classifier
-public Evaluation cross_pred(Classifier model) 
+/*public Evaluation pred(Classifier model) 
 {
 	Evaluation evaluation = null;
 	
@@ -194,7 +195,96 @@ public Evaluation cross_pred(Classifier model)
 	return evaluation;
 	
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}*/
+
+public Evaluation pred2(Classifier model) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+		//evaluation.evaluateModel(model, tests);	
+		
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  //tests2[0]  is not an error as number of instance in same in all tests2[0], tests2[1]..., any one can be used
+			 double actual = curr.classValue();
+			 
+			 
+				 
+				 score= model.distributionForInstance(curr);
+				
+			 
+			// System.out.println(" actual="+actual+ "  mode 0=" +  score[0][1]+   " model 1="+ score[1][1]);
+			 
+			 // Find index of the model giving maximum valaue for the test instance
+			 double max_score = 0.0;
+			  
+			 
+			 double predicted = 0;
+		     if ( score[1] <= 0.5) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+		
+
+	 util5_met ut =  new util5_met();
+	double precision=ut.compute_precision(tp, fp, tn, fn);
+	 double recall= ut.compute_recall(tp, fp, tn, fn);
+	double fmeasure=ut.compute_fmeasure(tp, fp, tn, fn);
+	double accuracy=ut.compute_accuracy(tp, fp, tn, fn);
+	double roc_auc =0.0;// call some method here if possible	
+
+		System.out.println("Pre="+ precision+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }
+
 
 
 public Connection initdb(String db_name)
@@ -340,7 +430,7 @@ public static void main(String args[])
 				   
 					clp.pre_process_data();
 					
-					clp.result = clp.cross_pred(models[j]);				
+					clp.result = clp.pred2(models[j]);				
 					
 					precision[i]         =   clp.result.precision(1)*100;
 					recall[i]            =   clp.result.recall(1)*100;

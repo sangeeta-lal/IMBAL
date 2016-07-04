@@ -246,7 +246,7 @@ def read_logged_data():
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=1 limit 0, 20"
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=1 "
    
 
     select_cursor.execute(str_logged_data)
@@ -268,7 +268,7 @@ def read_non_logged_data():
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=0 limit 0, 20"
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=0 "
    
 
     select_cursor.execute(str_non_logged_data)
