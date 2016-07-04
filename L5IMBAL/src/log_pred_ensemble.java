@@ -211,10 +211,10 @@ private void compute_results_of_ensemble(Instances[] trains2, Instances[] tests2
 		 double avg_score = 0.0;
 		 for(int i=0;i<no_of_subsets;i++)
 		 {
-			 if(score[i][1]>avg_score)
-			 {
+			 
+			 
 				 avg_score= avg_score+ score[i][1];
-			 }
+			 
 			 
 		 }
 		 
