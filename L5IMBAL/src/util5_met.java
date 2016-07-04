@@ -1129,10 +1129,10 @@ public static String readFileToString(String filePath) throws IOException
 }
 
 // This function is created to compute the precision of classification
-public double compute_precision(FastVector pred_10_db)
+public double compute_precision(double tp, double fp, double tn, double fn)
 {
 	double precision = 0.0;
-	double tp=0.0;
+	/*double tp=0.0;
 	double fn=0.0;
 	double fp=0.0;
 	double tn=0.0;
@@ -1165,7 +1165,7 @@ public double compute_precision(FastVector pred_10_db)
 			     }
 		}
 			    
-	}// for
+	}// for */
 
 	if((tp+ fp)>0)
 	{
@@ -1179,10 +1179,10 @@ public double compute_precision(FastVector pred_10_db)
 
 
 // This function will be used to compute recall of classifcation results
-public double compute_recall(FastVector pred_10_db)
+public double compute_recall(double tp, double fp, double tn, double fn)
 {
 	double recall = 0.0;
-	double tp=0.0;
+/*	double tp=0.0;
 	double fn=0.0;
 	double fp=0.0;
 	double tn=0.0;
@@ -1214,7 +1214,7 @@ public double compute_recall(FastVector pred_10_db)
 			     }
 		}
 			    
-	}// for
+	}// for*/
 
 	if((tp+ fn)>0)
 	{
@@ -1228,45 +1228,10 @@ public double compute_recall(FastVector pred_10_db)
 }
 
 //This function is created to compute the fmeaure of classification
-public double compute_fmeasure(FastVector pred_10_db)
+public double compute_fmeasure(double tp, double fp, double tn, double fn)
 {
 	double fmeasure = 0.0;
-	double tp=0.0;
-	double fn=0.0;
-	double fp=0.0;
-	double tn=0.0;
 	
-	for (int i = 0; i < pred_10_db.size(); i++)
-	{
-		NominalPrediction np = (NominalPrediction) pred_10_db.elementAt(i);		
-		
-	//coupute tp	
-	  if (np.actual() == 1) 
-	  {
-	     if (np.predicted() == 1) 
-	       {
-			       
-				tp++;
-		    } 
-	     else {
-			       fn++;
-			   }
-	   }
-
-	  else if (np.actual() == 0) 
-	   {
-		   if (np.predicted() == 0)
-		      {
-			       tn++;
-			   }
-		   else {
-			       fp++;
-			     }
-		}
-			    
-	}// for
-
-	 
 	if((2*tp+fp+fn)>0)
 	{
 	fmeasure = 100.0* 2.0* (tp)/ (2*tp + fp+fn);
@@ -1278,10 +1243,10 @@ public double compute_fmeasure(FastVector pred_10_db)
 }
 
 //This function is created to compute accuracy
-public double compute_accuracy(FastVector pred_10_db)
+public double compute_accuracy(double tp, double fp, double tn, double fn)
 {
 	double accuracy = 0.0;
-	double tp=0.0;
+	/*double tp=0.0;
 	double fn=0.0;
 	double fp=0.0;
 	double tn=0.0;
@@ -1294,11 +1259,11 @@ public double compute_accuracy(FastVector pred_10_db)
 			correct++;
 		}
 		
-	}
+	}*/
 
-	if((correct)>0)
+	if((tp+tn)>0)
 	{
-	accuracy = 100.0* (correct)/ (pred_10_db.size());
+	accuracy = 100.0* (tp+tn)/ (tp+fp+tn+fn);
 	}
 	
 	accuracy =   Math.round(accuracy * 100.0) / 100.0;
@@ -1306,7 +1271,7 @@ public double compute_accuracy(FastVector pred_10_db)
 }
 
 
-public double compute_roc_auc(FastVector pred_10_db) 
+public double compute_roc_auc(double tp, double fp, double tn,double fn) 
 {
 	double roc_auc =0.0;
 	// TODO Auto-generated method stub

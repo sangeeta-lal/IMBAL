@@ -329,10 +329,8 @@ def create_train_subsets_k(k, logged_size_array, non_logged_size_array, logged_t
         
         
         train_subset_file_path  = path + project+"-arff\\catch\\train_1\\k"+(str)(k)+"\\"+project+"_train_sub_"+(str)(j+1)+".arff"
-        
         file_sub_train =  open(train_subset_file_path, 'w+')
     
-   
         # 1. Write header in the file
         train_subset_relation_name =  project +"_catch_train_subset_"+(str)(j+1)
         write_header(file_sub_train, train_subset_relation_name)
@@ -351,15 +349,11 @@ def create_train_subsets_k(k, logged_size_array, non_logged_size_array, logged_t
                 
         file_sub_train.close()
             
-        #logged_start = logged_end
-        #logged_end  = logged_end +   logged_size_array[j]
-         
-        #non_logged_start = non_logged_end
-        #non_logged_end  = non_logged_end +   non_logged_size_array[j]
-        
         j=j+1 
     
-    
+#===========================================================================#
+#    Creating train and test dataset                                        #
+#===========================================================================#    
 def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
 
     logged_data = read_logged_data()   
@@ -488,86 +482,10 @@ def create_train_data_set_for_different_k(a,b):
 
         i=i+1
     
-"""    
-
-#===========================================#
-#@ 2. Create 10 small dataset (balance)
-#===========================================#    
-def create_10_small_balance_files():
-
-    number_of_small_ds = 10
-    for i in range(number_of_small_ds):
-        
-  
-    
-        #===========Read all the catch blocks===============================#
-        str_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                       throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      is_method_have_param, method_param_type, method_param_name, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
-                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=1"   
-  
-        select_cursor.execute(str_logged_data)
-        logged_data = select_cursor.fetchall()
-        
-        logged_data_count =  len(logged_data)
-        
-        #===================================#
-       
-        #==open file ===#
-        global small_balance_db_file_path
-        file_path =  small_balance_db_file_path+"_"+(str)(i+1)+".arff"        
-        file_obj =  open(file_path, 'w+')
-        
-        #====  1. Write Header============= #
-        relation_name =  project +"_catch_balance_"+(str)(i+1)
-        write_header(file_obj, relation_name)
-    
-        
-        #====  2. Write Instances=============#
-        for d in logged_data:   
-            write_in_file(file_obj, d)            
-            
-            
-        str_non_logged_data = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                       throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      is_method_have_param, method_param_type, method_param_name, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
-                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try, try_id, catch_id, is_catch_logged  from  "+ main_source_table +" where catch_exc!=''  and is_catch_logged=0"   
-  
-        select_cursor.execute(str_non_logged_data)
-        non_logged_data = select_cursor.fetchall()
-        
-     
-            
-        np.random.seed(i)
-        indices = list()
-        indices = np.random.permutation(len(non_logged_data))[:len(logged_data)]
-
-        print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices)
-
-        valid_index=-1
-
-        for d in non_logged_data:
-   
-            valid_index= valid_index+1
-            if valid_index in indices: 
-                write_in_file(file_obj, d)    
-                       
-        
-        file_obj.close()  
 
 
-"""
+
 #=========== Run ========================#
-
-
 create_complete_train_and_test_file_logged(train_file_path, test_file_path)
 create_train_data_set_for_different_k(2,10)
 
