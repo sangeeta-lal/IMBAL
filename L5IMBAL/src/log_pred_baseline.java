@@ -213,19 +213,14 @@ public Evaluation pred2(Classifier model)
 		 {
 			     
 			 double score[] ;
-			 Instance curr  =  tests.instance(j);  //tests2[0]  is not an error as number of instance in same in all tests2[0], tests2[1]..., any one can be used
+			 Instance curr  =  tests.instance(j);  
 			 double actual = curr.classValue();
 			 
-			 
+			  
+			score= model.distributionForInstance(curr);
 				 
-				 score= model.distributionForInstance(curr);
-				
-			 
-			// System.out.println(" actual="+actual+ "  mode 0=" +  score[0][1]+   " model 1="+ score[1][1]);
 			 
 			 // Find index of the model giving maximum valaue for the test instance
-			 double max_score = 0.0;
-			  
 			 
 			 double predicted = 0;
 		     if ( score[1] <= 0.5) 

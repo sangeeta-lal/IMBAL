@@ -208,19 +208,20 @@ private void compute_results_of_ensemble(Instances[] trains2, Instances[] tests2
 		// System.out.println(" actual="+actual+ "  mode 0=" +  score[0][1]+   " model 1="+ score[1][1]);
 		 
 		 // Find index of the model giving maximum valaue for the test instance
-		 double max_score = 0.0;
+		 double avg_score = 0.0;
 		 for(int i=0;i<no_of_subsets;i++)
 		 {
-			 if(score[i][1]>max_score)
+			 if(score[i][1]>avg_score)
 			 {
-				 max_score= score[i][1];
+				 avg_score= avg_score+ score[i][1];
 			 }
 			 
 		 }
 		 
+		 avg_score = (1.0*avg_score)/no_of_subsets;
 		 
 		 double predicted = 0;
-	     if ( max_score <= 0.5) 
+	     if ( avg_score <= 0.5) 
 	     {
 	      predicted = 0;
 	     } else 
