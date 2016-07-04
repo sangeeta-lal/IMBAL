@@ -160,7 +160,7 @@ public class log_pred_ensemble
 						//DataSource trainsource;						
 						read_file(j-1, train_file_path, test_file_path);
 						
-						pre_process_data(j-1);
+						pre_process_data(j-1);  
 						
 					}// j
 				
