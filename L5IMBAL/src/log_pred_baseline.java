@@ -91,6 +91,11 @@ public class log_pred_baseline
 	//Connection conn=null;	
 	//java.sql.Statement stmt = null;
    
+	double precision[];
+	double recall[];
+	double fmeasure[];
+	double accuracy[];
+	double roc_auc[];
 	
 	
 	// This function uses dataset from the ARFF files
@@ -197,7 +202,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }*/
 
-public Evaluation pred2(Classifier model) 
+public Evaluation pred2(Classifier model, double thres, int itr) 
 {
 	Evaluation evaluation = null;
 	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
@@ -220,10 +225,10 @@ public Evaluation pred2(Classifier model)
 			score= model.distributionForInstance(curr);
 				 
 			 
-			 // Find index of the model giving maximum valaue for the test instance
+			 // Find index of the model giving maximum value for the test instance
 			 
 			 double predicted = 0;
-		     if ( score[1] <= 0.5) 
+		     if ( score[1] <= thres) 
 		     {
 		      predicted = 0;
 		     } else 
@@ -261,13 +266,13 @@ public Evaluation pred2(Classifier model)
 		
 
 	 util5_met ut =  new util5_met();
-	double precision=ut.compute_precision(tp, fp, tn, fn);
-	 double recall= ut.compute_recall(tp, fp, tn, fn);
-	double fmeasure=ut.compute_fmeasure(tp, fp, tn, fn);
-	double accuracy=ut.compute_accuracy(tp, fp, tn, fn);
-	double roc_auc =0.0;// call some method here if possible	
+	 precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	roc_auc[itr] =0.0;// call some method here if possible	
 
-		System.out.println("Pre="+ precision+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
 	
 	
 	} catch (Exception e) {
@@ -304,7 +309,7 @@ public Connection initdb(String db_name)
 
 
 // This method computes the average value  and std. deviation and inserts them in a db
-public void compute_avg_stdev_and_insert(String classifier_name, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
+public void compute_avg_stdev_and_insert(String classifier_name, double thres, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
 {
 
 	 // computes following metrics:
@@ -346,7 +351,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double[] precis
 			
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+","+ trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
@@ -412,31 +417,35 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			double precision[]   = new double[clp.iterations];
-			double recall[]      = new double[clp.iterations];
-			double accuracy[]    = new double[clp.iterations];
-			double fmeasure[]    = new double[clp.iterations];	
-			double roc_auc[]     = new double[clp.iterations];
+			for(double thres=0.1; thres<=1.0; thres=thres+0.01)
+			{
+				clp.precision   = new double[clp.iterations];
+				clp.recall      = new double[clp.iterations];
+				clp.accuracy    = new double[clp.iterations];
+				clp.fmeasure    = new double[clp.iterations];	
+				clp.roc_auc     = new double[clp.iterations];
 			
 			
-			for(int i=0; i<clp.iterations; i++)
-				 {
-				    clp.read_file(i+1);
+				for(int i=0; i<clp.iterations; i++)
+					{
+				    	clp.read_file(i+1);
 				   
-					clp.pre_process_data();
+				    	clp.pre_process_data();
 					
-					clp.result = clp.pred2(models[j]);				
+				    	clp.result = clp.pred2(models[j], thres,i);				
 					
-					precision[i]         =   clp.result.precision(1)*100;
-					recall[i]            =   clp.result.recall(1)*100;
-					accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
-					fmeasure[i]          =   clp.result.fMeasure(1)*100;
-					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;			
+				    	/*clp.precision[i]         =   clp.result.precision(1)*100;
+				    	clp.recall[i]            =   clp.result.recall(1)*100;
+				    	clp.accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
+				    	clp.fmeasure[i]          =   clp.result.fMeasure(1)*100;
+				    	clp.roc_auc[i]           =   clp.result.areaUnderROC(1)*100;*/			
 					
 						
-				}
+					}
 					  
-			   clp.compute_avg_stdev_and_insert(classifier_name, precision, recall, accuracy, fmeasure , roc_auc );
+			   clp.compute_avg_stdev_and_insert(classifier_name, thres, clp.precision, clp.recall, clp.accuracy, clp.fmeasure , clp.roc_auc );
+			   
+			} // thres
 		}		
 		
 		

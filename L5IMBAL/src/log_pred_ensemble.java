@@ -140,38 +140,41 @@ public class log_pred_ensemble
 			 fmeasure    = new double[iterations];	
 			 roc_auc     = new double[iterations];
 	  	   	
-			for(int itr=0; itr<iterations;itr++) 
-			{
-				train_data_source = new DataSource[i];
-				test_data_source = test_data_source;// Its not an array test set is same for all the training subsets  						
+			 for(double thres =0.1; thres<=1.0;thres=thres+0.1)
+			 {
+				 for(int itr=0; itr<iterations;itr++) 
+				 	{
+					 train_data_source = new DataSource[i];
+					 test_data_source = test_data_source;// Its not an array test set is same for all the training subsets  						
 
-				trains= new Instances[i];
-				tests = new  Instances[i];
+					 trains= new Instances[i];
+					 tests = new  Instances[i];
 				
-				//Set train and test data source
-				for(int j=1;j<=i;j++)
-					{
+					 //Set train and test data source
+					 for(int j=1;j<=i;j++)
+					 	{
 					
-					// file path  subset = i, and iteration = itr
-					  String train_file_path = path+ source_project+"-arff\\"+ type+"\\train_"+(itr+1)+"\\k"+i+"\\"+source_project+"_train_sub_"+j+".arff";
-					  String test_file_path = path+ source_project+"-arff\\"+ type+"\\test_"+(itr+1)+"\\"+source_project+"_test.arff";
+						 	// file path  subset = i, and iteration = itr
+						 	String train_file_path = path+ source_project+"-arff\\"+ type+"\\train_"+(itr+1)+"\\k"+i+"\\"+source_project+"_train_sub_"+j+".arff";
+						 	String test_file_path = path+ source_project+"-arff\\"+ type+"\\test_"+(itr+1)+"\\"+source_project+"_test.arff";
 						
-					 // System.out.println("test file path="+ test_file_path);
-						//DataSource trainsource;						
-						read_file(j-1, train_file_path, test_file_path);
+						 	// System.out.println("test file path="+ test_file_path);
+						 	//DataSource trainsource;						
+						 	read_file(j-1, train_file_path, test_file_path);
 						
-						pre_process_data(j-1);  
+						 	pre_process_data(j-1);  
 						
-					}// j
+					 	}// j
 				
-				//pre-dict usinensemble
-				compute_results_of_ensemble(trains, tests, i, model, itr);
+					 //pre-dict usinensemble
+					 compute_results_of_ensemble(trains, tests, i, model, itr, thres);
 								
-			}// itr
+				 	}// itr
 	  	
 			 
-			String classifier_name = model[0].getClass().getSimpleName();
-			 compute_avg_stdev_and_insert(classifier_name,i,  precision,  recall,  accuracy,  fmeasure,  roc_auc);
+			  String classifier_name = model[0].getClass().getSimpleName();
+			  compute_avg_stdev_and_insert(classifier_name,i, thres, precision,  recall,  accuracy,  fmeasure,  roc_auc);
+			 }//thres
 			
 	  	}// for i
 	  	
@@ -179,7 +182,7 @@ public class log_pred_ensemble
 
 
 // This file will compute the results of ensemble creation using the specified classifier model
-private void compute_results_of_ensemble(Instances[] trains2, Instances[] tests2, int no_of_subsets, Classifier model[], int itr) 
+private void compute_results_of_ensemble(Instances[] trains2, Instances[] tests2, int no_of_subsets, Classifier model[], int itr, double thres) 
 {
 	 
 	int tp=0, fp = 0, tn = 0, fn=0;
@@ -221,7 +224,7 @@ private void compute_results_of_ensemble(Instances[] trains2, Instances[] tests2
 		 avg_score = (1.0*avg_score)/no_of_subsets;
 		 
 		 double predicted = 0;
-	     if ( avg_score <= 0.5) 
+	     if ( avg_score <= thres) 
 	     {
 	      predicted = 0;
 	     } else 
@@ -355,7 +358,7 @@ public Connection initdb(String db_name)
 
 
 // This method computes the average value  and std. deviation and inserts them in a db
-public void compute_avg_stdev_and_insert(String classifier_name, int no_of_subsets, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
+public void compute_avg_stdev_and_insert(String classifier_name, int no_of_subsets, double thres, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
 {
 
 	 // computes following metrics:
@@ -395,7 +398,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, int no_of_subse
 		std_roc_auc     = ut.compute_stddev(roc_auc);
 		
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ source_project +"',"+no_of_subsets+",'"+ classifier_name+"',"+ trains[0].numInstances() + ","+ tests[0].numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ source_project +"',"+no_of_subsets+",'"+ classifier_name+"',"+thres+","+ trains[0].numInstances() + ","+ tests[0].numInstances()+","
 		                       + iterations+","+trains[0].numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
@@ -441,41 +444,6 @@ public static void main(String args[])
 	 
 	 log_pred_ensemble clp = new log_pred_ensemble();	
 	 clp.ensemble_prediction(rf);
-		
-		/*
-		// Length of models
-		for(int j=0; j<models.length; j++)
-		{
-			
-			String classifier_name =  models[j].getClass().getSimpleName();
-			
-			double precision[]   = new double[clp.iterations];
-			double recall[]      = new double[clp.iterations];
-			double accuracy[]    = new double[clp.iterations];
-			double fmeasure[]    = new double[clp.iterations];	
-			double roc_auc[]     = new double[clp.iterations];
-			
-			
-			for(int i=0; i<clp.iterations; i++)
-				 {
-				    clp.read_file(i+1);
-				   
-					clp.pre_process_data();
-					
-					clp.result = clp.cross_pred(models[j]);				
-					
-					precision[i]         =   clp.result.precision(1)*100;
-					recall[i]            =   clp.result.recall(1)*100;
-					accuracy[i]          =   clp.result.pctCorrect(); //not required to multiply by 100, it is already in percentage
-					fmeasure[i]          =   clp.result.fMeasure(1)*100;
-					roc_auc[i]           =   clp.result.areaUnderROC(1)*100;			
-					
-						
-				}
-					  
-			   clp.compute_avg_stdev_and_insert(classifier_name, precision, recall, accuracy, fmeasure , roc_auc );
-		}	*/	
-		
 		
 	}
 	
