@@ -17,9 +17,11 @@ import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
+import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.ADTree;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
+import weka.classifiers.trees.RandomTree;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -404,9 +406,15 @@ public static void main(String args[])
 	{
 	
 	  
-	  Classifier models [] = {  new RandomForest(),
-			                    new Logistic(),
-			  					new J48()};
+	  Classifier models [] = { // new RandomForest(),
+			                    //new Logistic(),
+			  					//new J48(),
+	                            new RandomTree(),
+	                            new ZeroR(),
+	                            new DecisionTable(),
+	                            new AdaBoostM1(),
+	                            new ADTree()
+	                            };
 	 
 		log_pred_baseline clp = new log_pred_baseline();
 		
