@@ -425,7 +425,7 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			for(double thres=0.1; thres<=1.0; thres=thres+0.01)
+			for(double thres=0.1; thres<=1.0; thres=thres+0.1)
 			{
 				clp.precision   = new double[clp.iterations];
 				clp.recall      = new double[clp.iterations];
