@@ -16,6 +16,7 @@ import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.meta.AdaBoostM1;
+import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.ADTree;
@@ -39,7 +40,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * */
-public class log_pred_baseline
+public class log_pred_bagging
 {
 
 	/*
@@ -70,7 +71,7 @@ public class log_pred_baseline
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_"+type;
+	String result_table = "result_bagging_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
@@ -204,14 +205,19 @@ public void create_train_and_test_split(double train_size, double test_size)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }*/
 
-public Evaluation pred2(Classifier model, double thres, int itr) 
+public Evaluation pred2(Classifier m1, double thres, int itr) 
 {
 	Evaluation evaluation = null;
 	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
 	
 	try {
 	      
-		evaluation= new Evaluation(trains);		
+
+		Bagging model =  new Bagging();	
+	    model.setClassifier(m1);
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
 		model.buildClassifier(trains);
 		
 		//evaluation.evaluateModel(model, tests);	
@@ -406,9 +412,9 @@ public static void main(String args[])
 	{
 	
 	  
-	  Classifier models [] = { // new RandomForest(),
-			                    //new Logistic(),
-			  					//new J48(),
+	  Classifier models [] = {  new RandomForest(),
+			                    new Logistic(),
+			  					new J48(),
 	                            new RandomTree(),
 	                            new ZeroR(),
 	                            new DecisionTable(),
@@ -417,7 +423,7 @@ public static void main(String args[])
 	                            new RBFNetwork()
 	                            };
 	 
-		log_pred_baseline clp = new log_pred_baseline();
+		log_pred_bagging clp = new log_pred_bagging();
 		
 		
 		// Length of models
