@@ -11,6 +11,7 @@ import weka.attributeSelection.GainRatioAttributeEval;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
+import weka.attributeSelection.ReliefFAttributeEval;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
@@ -34,6 +35,7 @@ import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
+import weka.attributeSelection.*;
 import weka.filters.supervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.Standardize;
@@ -104,6 +106,7 @@ public class log_pred_bagging_feature_selection
 	double fmeasure[];
 	double accuracy[];
 	double roc_auc[];
+	String feature_selection="";
 	
 	
 	// This function uses dataset from the ARFF files
@@ -186,6 +189,7 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 		 
 		//information gain
 		/*int no_of_features = 400;
+		 feature_selection="Info-Gain";
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(no_of_features);
@@ -201,6 +205,7 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 		/*
 		 
 		 int no_of_features = 10;
+		 feature_selection="PCA";
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(no_of_features);
@@ -211,14 +216,16 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
 	     tests= Filter.useFilter(tests, attributeSelection);
-		
 		  
 		// */
+		
+		
 	     
-	   //PCA
-			///*
+	   //Gain-Ratio
+			/*
 			 
 			 int no_of_features = 10;
+			 feature_selection = "Gain-Ratio";
 			 AttributeSelection attributeSelection = new  AttributeSelection(); 
 		     Ranker ranker = new Ranker(); 
 		     ranker.setNumToSelect(no_of_features);
@@ -233,7 +240,25 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 			  
 			// */
 		    
-	     
+		   //Co-rrelation Att
+				///*
+				 
+				 int no_of_features = 10;
+				 feature_selection = "Relief";
+				 AttributeSelection attributeSelection = new  AttributeSelection(); 
+			     Ranker ranker = new Ranker(); 
+			     ranker.setNumToSelect(no_of_features);
+			     ReliefFAttributeEval Eval = new ReliefFAttributeEval(); 
+			     attributeSelection.setEvaluator(Eval); 
+			     attributeSelection.setSearch(ranker); 
+			     attributeSelection.setInputFormat(trains); 
+			     trains = Filter.useFilter(trains, attributeSelection); 
+			     
+			     tests= Filter.useFilter(tests, attributeSelection);
+				
+				  
+				// */
+			
 	     
 		
 		//Bagging
@@ -380,7 +405,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 			
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+"Gain-Ratio"+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+feature_selection+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
