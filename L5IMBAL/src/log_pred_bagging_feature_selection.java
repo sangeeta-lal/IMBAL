@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import weka.attributeSelection.InfoGainAttributeEval;
+import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -183,7 +184,7 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 	      
 		 
 		//information gain
-		int no_of_features = 400;
+		/*int no_of_features = 400;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(no_of_features);
@@ -193,7 +194,25 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 	     attributeSelection.setInputFormat(trains); 
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
+	     tests= Filter.useFilter(tests, attributeSelection);*/
+		
+		//PCA
+		///*
+		 
+		 int no_of_features = 10;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(no_of_features);
+	     PrincipalComponents infoGainAttributeEval = new PrincipalComponents(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
 	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		  
+		// */
 		
 		//Bagging
 		  Bagging model =  new Bagging();	
