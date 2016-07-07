@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import weka.attributeSelection.GainRatioAttributeEval;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
@@ -197,7 +198,7 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//PCA
-		///*
+		/*
 		 
 		 int no_of_features = 10;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
@@ -213,6 +214,27 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 		
 		  
 		// */
+	     
+	   //PCA
+			///*
+			 
+			 int no_of_features = 10;
+			 AttributeSelection attributeSelection = new  AttributeSelection(); 
+		     Ranker ranker = new Ranker(); 
+		     ranker.setNumToSelect(no_of_features);
+		     GainRatioAttributeEval Eval = new GainRatioAttributeEval(); 
+		     attributeSelection.setEvaluator(Eval); 
+		     attributeSelection.setSearch(ranker); 
+		     attributeSelection.setInputFormat(trains); 
+		     trains = Filter.useFilter(trains, attributeSelection); 
+		     
+		     tests= Filter.useFilter(tests, attributeSelection);
+			
+			  
+			// */
+		    
+	     
+	     
 		
 		//Bagging
 		  Bagging model =  new Bagging();	
@@ -358,7 +380,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 			
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+"PCA"+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+"Gain-Ratio"+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
@@ -469,3 +491,4 @@ public static void main(String args[])
 }
 
 
+// https://www.linkedin.com/pulse/20140703151554-81407107-attribute-selection-with-weka-an-introduction
