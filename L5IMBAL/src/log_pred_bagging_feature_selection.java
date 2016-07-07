@@ -240,8 +240,8 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 			  
 			// */
 		    
-		   //Co-rrelation Att
-				///*
+		   //Relief Att
+				/*
 				 
 				 int no_of_features = 10;
 				 feature_selection = "Relief";
@@ -259,7 +259,25 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 				  
 				// */
 			
-	     
+			     //OneR Att
+					///*
+					 
+					 int no_of_features = 10;
+					 feature_selection = "Relief";
+					 AttributeSelection attributeSelection = new  AttributeSelection(); 
+				     Ranker ranker = new Ranker(); 
+				     ranker.setNumToSelect(no_of_features);
+				     OneRAttributeEval Eval = new OneRAttributeEval(); 
+				     attributeSelection.setEvaluator(Eval); 
+				     attributeSelection.setSearch(ranker); 
+				     attributeSelection.setInputFormat(trains); 
+				     trains = Filter.useFilter(trains, attributeSelection); 
+				     
+				     tests= Filter.useFilter(tests, attributeSelection);
+					
+					  
+					// */
+				
 		
 		//Bagging
 		  Bagging model =  new Bagging();	
