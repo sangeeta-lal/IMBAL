@@ -157,11 +157,11 @@ public void pre_process_data()
 	     	  
 
 	 	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
-	     	  Standardize  std_filter =  new Standardize();
-	     	  std_filter.setInputFormat(trains);
-	     	  trains= Filter.useFilter(trains,std_filter);  
+	     	 // Standardize  std_filter =  new Standardize();
+	     	 // std_filter.setInputFormat(trains);
+	     	 // trains= Filter.useFilter(trains,std_filter);  
 	     	  
-	     	  tests =  Filter.useFilter(tests, std_filter);
+	     	 // tests =  Filter.useFilter(tests, std_filter);
 	     	
 	 	     //3. Discretizations
 	     	 // Discretize dfilter = new Discretize();

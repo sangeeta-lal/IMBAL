@@ -16,7 +16,7 @@ import utill5
 ======================================================================================================"""
 
 #Project
-#"""
+"""
 project= "tomcat"
 title = 'Tomcat'
 #"""
@@ -37,8 +37,8 @@ password="1234"
 database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "F:\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
-test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
+train_file_path=path+project+"-arff\\catch\\"
+test_file_path = path+ project+"-arff\\catch\\"
 
 #logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\logged_indices.txt"
 #non_logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\non_logged_indices.txt"
@@ -51,8 +51,8 @@ password="sangeetal"
 database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
-test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
+train_file_path=path+project+"-arff\\catch\\"
+test_file_path = path+ project+"-arff\\catch\\
 #"""
 
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
@@ -354,7 +354,7 @@ def create_train_subsets_k(k, logged_size_array, non_logged_size_array, logged_t
 #===========================================================================#
 #    Creating train and test dataset                                        #
 #===========================================================================#    
-def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
+def create_complete_train_and_test_file_logged(train_file_path, test_file_path, i):
 
     logged_data = read_logged_data()   
     non_logged_data = read_non_logged_data()
@@ -364,6 +364,13 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
     #@ 1. Create one complete  train and test database (logged data)   
     #===============================================================#
    
+    train_file_path = train_file_path+"train_"+(str)(i)+"\\k1\\"+project+"_train.arff"
+    test_file_path  = test_file_path+"test_"+(str)(i)+"\\"+project+"_test.arff"
+    
+   # train_file_path=path+project+"-arff\\catch\\train_1\\k1\\"+project+"_train.arff"  # Complete taining file, its subsects will be create for ensemble creation
+   #test_file_path = path+ project+"-arff\\catch\\test_1\\"+project+"_test.arff"
+
+    
     file_train =  open(train_file_path, 'w+')
     file_test  =  open(test_file_path,  'w+')
    
@@ -375,7 +382,7 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path):
     write_header(file_test, test_relation_name)       
      
             
-    np.random.seed(0)
+    np.random.seed(i-1)
     
     logged_train_indices = list()
     logged_test_indices = list()
@@ -486,6 +493,10 @@ def create_train_data_set_for_different_k(a,b):
 
 
 #=========== Run ========================#
-create_complete_train_and_test_file_logged(train_file_path, test_file_path)
-create_train_data_set_for_different_k(2,10)
+
+i=1
+while(i<=10):
+    create_complete_train_and_test_file_logged(train_file_path, test_file_path, i)
+    i=i+1
+#create_train_data_set_for_different_k(2,10)
 
