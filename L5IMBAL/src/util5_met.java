@@ -1321,6 +1321,46 @@ public double getStdDev()
     return Math.sqrt(getVariance());
 }*/
 
+// This method is specifically generated for computing average of the time array
+public double compute_time_avg(long[] train_time) 
+{
+	 double sum = 0.0;
+	 double mean = 0.0;
+	    int size =  train_time.length;
+	    for(int i=0; i<size; i++)
+	    {
+	    	sum =  sum + train_time[i];
+	    }
+	    
+	    mean = sum/size;
+	    mean =  Math.round(mean * 100.0) / 100.0;
+	    
+	    return mean;
+}
+
+	
+
+
+// This method is specifically created for computing the std deviation ofthe time array
+public double compute_time_std(long[] train_time)
+{
+	double mean = compute_time_avg(train_time);
+	double temp = 0;
+	double variance =0.0;
+	double stddev = 0.0;
+	int size = train_time.length;
+
+	for(int i=0; i<size; i++)
+	{
+		temp= temp+ (mean-train_time[i])*(mean-train_time[i]);	
+	}
+
+	stddev= Math.sqrt(temp/size);
+	stddev = Math.round(stddev*100.0)/100.0;
+	return stddev;
+}
+
+
 
 
 }//class

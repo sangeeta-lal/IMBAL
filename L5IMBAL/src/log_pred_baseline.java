@@ -38,6 +38,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 /*
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
+ * 2. Version  =  baseline 
  * */
 public class log_pred_baseline
 {
@@ -99,6 +100,15 @@ public class log_pred_baseline
 	double accuracy[];
 	double roc_auc[];
 	
+	long trainbegin ;
+	long trainend ;
+	long testbegin ;
+	long testend ;
+	
+	long train_time[] ;
+	long test_time[];
+	
+	double no_of_features[];
 	
 	// This function uses dataset from the ARFF files
 	public void read_file(int i)
@@ -144,7 +154,7 @@ public void pre_process_data()
 			  tfidf_filter.setInputFormat(trains);
 	     	  trains = Filter.useFilter(trains, tfidf_filter);  
 	     	  
-	     	 tests = Filter.useFilter(tests, tfidf_filter);
+	     	  tests = Filter.useFilter(tests, tfidf_filter);
 	     	  
 
 	 	     //2. Standarize  (not normalize because normalization is affected by outliers very easily)   	  
@@ -211,11 +221,14 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 	
 	try {
 	      
+		trainbegin = System.currentTimeMillis();
 		evaluation= new Evaluation(trains);		
 		model.buildClassifier(trains);
 		
-		//evaluation.evaluateModel(model, tests);	
+		trainend = System.currentTimeMillis();
 		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
 		for (int j = 0; j < tests.numInstances(); j++) 
 		 {
 			     
@@ -265,14 +278,20 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 		 }//for
 
 		
-		
+	 testend = System.currentTimeMillis();
 
 	 util5_met ut =  new util5_met();
+	 
 	 precision[itr]=ut.compute_precision(tp, fp, tn, fn);
 	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
 	fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 	accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
 	roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
 
 		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
 	
@@ -311,7 +330,7 @@ public Connection initdb(String db_name)
 
 
 // This method computes the average value  and std. deviation and inserts them in a db
-public void compute_avg_stdev_and_insert(String classifier_name, double thres, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc) 
+public void compute_avg_stdev_and_insert(String classifier_name, double thres, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc , long train_time[], long test_time[]) 
 {
 
 	 // computes following metrics:
@@ -334,6 +353,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 		double std_accuracy = 0.0;
 		double std_fmeasure = 0.0;	
 		double std_roc_auc = 0.0;
+		
 		//double total_instances = 0.0;
 		
 		util5_met  ut = new util5_met();
@@ -350,12 +370,20 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 		std_accuracy    = ut.compute_stddev(accuracy);
 		std_roc_auc     = ut.compute_stddev(roc_auc);
 		
+		double avg_train_time= ut.compute_time_avg(train_time);	
+		double avg_test_time = ut.compute_time_avg(test_time);
+		double std_train_time= ut.compute_time_std(train_time);
+		double std_test_time =ut.compute_time_std(test_time);
 			
+		double avg_features = ut.compute_mean(no_of_features);
+		double std_features = ut.compute_stddev(no_of_features);
+		
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
 		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+","+ trains.numInstances() + ","+ tests.numInstances()+","
-		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
-		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
+		                       + iterations+","+avg_features+ ","+ std_features +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
+		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+ ","+avg_train_time+ ","+std_train_time+","+ avg_test_time+","+ std_test_time+ " )";
+		
 		System.out.println("Inserting="+ insert_str);
 		
 		Connection conn2 = initdb(db_name);
@@ -406,15 +434,17 @@ public static void main(String args[])
 	{
 	
 	  
-	  Classifier models [] = { // new RandomForest(),
-			                    //new Logistic(),
-			  					//new J48(),
+	  Classifier models [] = {  new RandomForest(),
+			                    new Logistic(),
+			  					new J48(),
 	                            new RandomTree(),
 	                            new ZeroR(),
 	                            new DecisionTable(),
 	                            new AdaBoostM1(),
 	                            new ADTree(),
-	                            new RBFNetwork()
+	                            new RBFNetwork(),
+	                            new AdaBoostM1(),
+	                            new DecisionTable()
 	                            };
 	 
 		log_pred_baseline clp = new log_pred_baseline();
@@ -426,14 +456,18 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			for(double thres=0.1; thres<=1.0; thres=thres+0.1)
+			for(double thres=0.5; thres==0.5; thres=thres+0.1)
 			{
 				clp.precision   = new double[clp.iterations];
 				clp.recall      = new double[clp.iterations];
 				clp.accuracy    = new double[clp.iterations];
 				clp.fmeasure    = new double[clp.iterations];	
 				clp.roc_auc     = new double[clp.iterations];
-			
+			    
+				clp.train_time= new long[clp.iterations];
+				clp.test_time= new long[clp.iterations];
+				
+				clp.no_of_features = new double[clp.iterations];
 			
 				for(int i=0; i<clp.iterations; i++)
 					{
@@ -452,7 +486,8 @@ public static void main(String args[])
 						
 					}
 					  
-			   clp.compute_avg_stdev_and_insert(classifier_name, thres, clp.precision, clp.recall, clp.accuracy, clp.fmeasure , clp.roc_auc );
+				
+			   clp.compute_avg_stdev_and_insert(classifier_name, thres, clp.precision, clp.recall, clp.accuracy, clp.fmeasure , clp.roc_auc, clp.train_time, clp.test_time );
 			   
 			} // thres
 		}		

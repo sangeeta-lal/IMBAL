@@ -16,7 +16,7 @@ import utill5
 ======================================================================================================"""
 
 #Project
-"""
+#"""
 project= "tomcat"
 title = 'Tomcat'
 #"""
@@ -52,7 +52,7 @@ database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
 train_file_path=path+project+"-arff\\catch\\"
-test_file_path = path+ project+"-arff\\catch\\
+test_file_path = path+ project+"-arff\\catch\\"
 #"""
 
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
@@ -498,5 +498,8 @@ i=1
 while(i<=10):
     create_complete_train_and_test_file_logged(train_file_path, test_file_path, i)
     i=i+1
-#create_train_data_set_for_different_k(2,10)
+
+
+
+#create_train_data_set_for_different_k(2,10)  # @Note: This function is not modifed may be wrong please check for correctness
 

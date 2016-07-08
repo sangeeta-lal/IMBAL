@@ -7,11 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import weka.attributeSelection.GainRatioAttributeEval;
-import weka.attributeSelection.InfoGainAttributeEval;
-import weka.attributeSelection.PrincipalComponents;
-import weka.attributeSelection.Ranker;
-import weka.attributeSelection.ReliefFAttributeEval;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
@@ -21,7 +16,6 @@ import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.meta.AdaBoostM1;
-import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.ADTree;
@@ -34,8 +28,6 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.supervised.attribute.AttributeSelection;
-import weka.attributeSelection.*;
 import weka.filters.supervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.Standardize;
@@ -46,8 +38,9 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 /*
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
+ * 2. Version  =  baseline + Threshold (It computes the result at every threshold)
  * */
-public class log_pred_bagging_feature_selection
+public class log_pred_baseline_threshold
 {
 
 	/*
@@ -78,7 +71,7 @@ public class log_pred_bagging_feature_selection
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_bagging_feature_selection_"+type;
+	String result_table = "result_baseline_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
@@ -106,7 +99,7 @@ public class log_pred_bagging_feature_selection
 	double fmeasure[];
 	double accuracy[];
 	double roc_auc[];
-	String feature_selection="";
+	
 	
 	
 	// This function uses dataset from the ARFF files
@@ -178,134 +171,50 @@ public void pre_process_data()
 
 }
 	
+/*
+//This method will divide the data in =to two parts: Not used i this work
+public void create_train_and_test_split(double train_size, double test_size) 
+{
+	all_data.randomize(new java.util.Random(0));
+	int trainSize = (int) Math.round(all_data.numInstances() * train_size);
+	int testSize = all_data.numInstances() - trainSize;
+	trains = new Instances(all_data, 0, trainSize);
+	tests = new Instances(all_data, trainSize, testSize);
 
-public Evaluation pred2(Classifier m1, double thres, int itr) 
+}*/
+
+
+// This function is used to train and test a using a given classifier
+/*public Evaluation pred(Classifier model) 
+{
+	Evaluation evaluation = null;
+	
+	try {
+	      
+		evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		evaluation.evaluateModel(model, tests);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}*/
+
+public Evaluation pred2(Classifier model, double thres, int itr) 
 {
 	Evaluation evaluation = null;
 	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
 	
 	try {
 	      
-		 
-		//information gain
-		/*int no_of_features = 400;
-		 feature_selection="Info-Gain";
-		 AttributeSelection attributeSelection = new  AttributeSelection(); 
-	     Ranker ranker = new Ranker(); 
-	     ranker.setNumToSelect(no_of_features);
-	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
-	     attributeSelection.setEvaluator(infoGainAttributeEval); 
-	     attributeSelection.setSearch(ranker); 
-	     attributeSelection.setInputFormat(trains); 
-	     trains = Filter.useFilter(trains, attributeSelection); 
-	     
-	     tests= Filter.useFilter(tests, attributeSelection);*/
-		
-		//PCA
-		/*
-		 
-		 int no_of_features = 10;
-		 feature_selection="PCA";
-		 AttributeSelection attributeSelection = new  AttributeSelection(); 
-	     Ranker ranker = new Ranker(); 
-	     ranker.setNumToSelect(no_of_features);
-	     PrincipalComponents infoGainAttributeEval = new PrincipalComponents(); 
-	     attributeSelection.setEvaluator(infoGainAttributeEval); 
-	     attributeSelection.setSearch(ranker); 
-	     attributeSelection.setInputFormat(trains); 
-	     trains = Filter.useFilter(trains, attributeSelection); 
-	     
-	     tests= Filter.useFilter(tests, attributeSelection);
-		  
-		// */
-		
-		
-	     
-	   //Gain-Ratio
-			/*
-			 
-			 int no_of_features = 10;
-			 feature_selection = "Gain-Ratio";
-			 AttributeSelection attributeSelection = new  AttributeSelection(); 
-		     Ranker ranker = new Ranker(); 
-		     ranker.setNumToSelect(no_of_features);
-		     GainRatioAttributeEval Eval = new GainRatioAttributeEval(); 
-		     attributeSelection.setEvaluator(Eval); 
-		     attributeSelection.setSearch(ranker); 
-		     attributeSelection.setInputFormat(trains); 
-		     trains = Filter.useFilter(trains, attributeSelection); 
-		     
-		     tests= Filter.useFilter(tests, attributeSelection);
-			
-			  
-			// */
-		    
-		   //Relief Att
-				/*
-				 
-				 int no_of_features = 10;
-				 feature_selection = "Relief";
-				 AttributeSelection attributeSelection = new  AttributeSelection(); 
-			     Ranker ranker = new Ranker(); 
-			     ranker.setNumToSelect(no_of_features);
-			     ReliefFAttributeEval Eval = new ReliefFAttributeEval(); 
-			     attributeSelection.setEvaluator(Eval); 
-			     attributeSelection.setSearch(ranker); 
-			     attributeSelection.setInputFormat(trains); 
-			     trains = Filter.useFilter(trains, attributeSelection); 
-			     
-			     tests= Filter.useFilter(tests, attributeSelection);
-				
-				  
-				// */
-			
-			     //OneR Att
-					/*
-					 
-					 int no_of_features = 10;
-					 feature_selection = "OneR";
-					 AttributeSelection attributeSelection = new  AttributeSelection(); 
-				     Ranker ranker = new Ranker(); 
-				     ranker.setNumToSelect(no_of_features);
-				     OneRAttributeEval Eval = new OneRAttributeEval(); 
-				     attributeSelection.setEvaluator(Eval); 
-				     attributeSelection.setSearch(ranker); 
-				     attributeSelection.setInputFormat(trains); 
-				     trains = Filter.useFilter(trains, attributeSelection); 
-				     
-				     tests= Filter.useFilter(tests, attributeSelection);
-					  
-					// */
-				
-				     
-				   //Symmetrical
-						///*
-						 
-						 int no_of_features = 10;
-						 feature_selection = "Symmetrical";
-						 AttributeSelection attributeSelection = new  AttributeSelection(); 
-					     Ranker ranker = new Ranker(); 
-					     ranker.setNumToSelect(no_of_features);
-					     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
-					     attributeSelection.setEvaluator(Eval); 
-					     attributeSelection.setSearch(ranker); 
-					     attributeSelection.setInputFormat(trains); 
-					     trains = Filter.useFilter(trains, attributeSelection); 
-					     
-					     tests= Filter.useFilter(tests, attributeSelection);
-						
-						  
-						// */
-					
-				     
-		
-		//Bagging
-		  Bagging model =  new Bagging();	
-	      model.setClassifier(m1);
-	      model.setNumIterations(20);
-		
-	      evaluation= new Evaluation(trains);		
-		  model.buildClassifier(trains);
+		evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
 		
 		//evaluation.evaluateModel(model, tests);	
 		
@@ -317,10 +226,11 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 			 double actual = curr.classValue();
 			 
 			  
-			 score= model.distributionForInstance(curr);
+			score= model.distributionForInstance(curr);
 				 
 			 
-			 // Find index of the model giving maximum value for the test instance	 
+			 // Find index of the model giving maximum value for the test instance
+			 
 			 double predicted = 0;
 		     if ( score[1] <= thres) 
 		     {
@@ -357,6 +267,8 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 		 }//for
 
 		
+		
+
 	 util5_met ut =  new util5_met();
 	 precision[itr]=ut.compute_precision(tp, fp, tn, fn);
 	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
@@ -443,7 +355,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 			
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+feature_selection+"',"+ trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+","+ trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+trains.numAttributes() +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+" )";
 		System.out.println("Inserting="+ insert_str);
@@ -496,19 +408,20 @@ public static void main(String args[])
 	{
 	
 	  
-	 Classifier models [] = {  new RandomForest(),
-             				// new Logistic(),
-			 				// new J48(),
-			 				// new RandomTree(),
-			 				// new ZeroR(),
-             				// new DecisionTable(),
-             				// new AdaBoostM1(),
-             				// new ADTree(),
-             				// new RBFNetwork(),
-             				// new AdaBoostM1(),
-             				// new DecisionTable()
-             };
-	log_pred_bagging_feature_selection clp = new log_pred_bagging_feature_selection();
+	  Classifier models [] = {  new RandomForest(),
+			                    new Logistic(),
+			  					new J48(),
+	                            new RandomTree(),
+	                            new ZeroR(),
+	                            new DecisionTable(),
+	                            new AdaBoostM1(),
+	                            new ADTree(),
+	                            new RBFNetwork(),
+	                            new AdaBoostM1(),
+	                            new DecisionTable()
+	                            };
+	 
+		log_pred_baseline_threshold clp = new log_pred_baseline_threshold();
 		
 		
 		// Length of models
@@ -555,4 +468,3 @@ public static void main(String args[])
 }
 
 
-// https://www.linkedin.com/pulse/20140703151554-81407107-attribute-selection-with-weka-an-introduction

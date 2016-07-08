@@ -411,17 +411,20 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, d
 public static void main(String args[])
 	{
 	
-	  
+	
 	  Classifier models [] = {  new RandomForest(),
-			                    new Logistic(),
-			  					new J48(),
-	                            new RandomTree(),
-	                            new ZeroR(),
-	                            new DecisionTable(),
-	                            new AdaBoostM1(),
-	                            new ADTree(),
-	                            new RBFNetwork()
-	                            };
+              					new Logistic(),
+              					new J48(),
+              					new RandomTree(),
+              					new ZeroR(),
+              					new DecisionTable(),
+              					new AdaBoostM1(),
+              					new ADTree(),
+              					new RBFNetwork(),
+              					new AdaBoostM1(),
+              					new DecisionTable()
+              				};
+
 	 
 		log_pred_bagging clp = new log_pred_bagging();
 		
