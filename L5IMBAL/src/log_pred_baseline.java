@@ -61,7 +61,7 @@ public class log_pred_baseline
 	//*/
 	 
 
-	int iterations=1;	
+	int iterations=10;	
 	String type = "catch";
 	//String type ="if";
 
@@ -442,9 +442,7 @@ public static void main(String args[])
 	                            new DecisionTable(),
 	                            new AdaBoostM1(),
 	                            new ADTree(),
-	                            new RBFNetwork(),
-	                            new AdaBoostM1(),
-	                            new DecisionTable()
+	                            new RBFNetwork()                           
 	                            };
 	 
 		log_pred_baseline clp = new log_pred_baseline();

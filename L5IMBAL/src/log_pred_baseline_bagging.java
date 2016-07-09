@@ -451,9 +451,7 @@ public static void main(String args[])
 	                            new DecisionTable(),
 	                            new AdaBoostM1(),
 	                            new ADTree(),
-	                            new RBFNetwork(),
-	                            new AdaBoostM1(),
-	                            new DecisionTable()
+	                            new RBFNetwork()
 	                            };
 	 
 		log_pred_baseline_bagging clp = new log_pred_baseline_bagging();
