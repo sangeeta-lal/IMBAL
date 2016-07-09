@@ -141,9 +141,9 @@ def write_in_file(file_obj, tuple_val):
              t_method_param_type + " " +  t_method_param_name +" " +  t_package_name+" "+ t_class_name + " "+ t_method_name         
     
     #Applying camel casing
-    text_features = utill4.camel_case_convert(text_features)
-    text_features = utill4.remove_stop_words(text_features)
-    text_features = utill4.stem_it(text_features)
+    text_features = utill5.camel_case_convert(text_features)
+    text_features = utill5.remove_stop_words(text_features)
+    text_features = utill5.stem_it(text_features)
     
     text_features =  text_features +" " + operator_feature
     
