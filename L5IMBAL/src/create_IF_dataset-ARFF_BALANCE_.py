@@ -318,13 +318,26 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path, 
     
     total_non_logged_data_points =  len(non_logged_data)
     non_logged_indices = np.random.permutation(len(non_logged_data))
-    non_logged_per_70  = (total_non_logged_data_points * 70)/100
-    non_logged_per_30 = total_non_logged_data_points-non_logged_per_70    
+    
+    # == Commenting these lines as I am creating balanced dataset ===#
+    #non_logged_per_70  = (total_non_logged_data_points * 70)/100
+    #non_logged_per_30 = total_non_logged_data_points-non_logged_per_70    
    
+    #global non_logged_train_indices 
+    #non_logged_train_indices = non_logged_indices[:non_logged_per_70]
+    #global non_logged_test_indices
+    #non_logged_test_indices = non_logged_indices[-non_logged_per_30:]
+    
+    
+    #==================================================================#
+   
+    non_logged_per_70 =  logged_per_70
+    non_logged_per_30 =  logged_per_30 
     global non_logged_train_indices 
     non_logged_train_indices = non_logged_indices[:non_logged_per_70]
     global non_logged_test_indices
     non_logged_test_indices = non_logged_indices[-non_logged_per_30:]
+   
    
     #============ Write training indices (non-logged) in file for ensemble creation=======#
     # write_indices_in_file(non_logged_train_indices, non_logged_indices_file_path)  # Not required
@@ -353,32 +366,6 @@ def create_complete_train_and_test_file_logged(train_file_path, test_file_path, 
     file_test.close()
     
     
-#==================================================================================#
-#  This function will bes used to create subsets of training dataset for ensemble 
-#  creation
-#==================================================================================#
-def create_train_data_set_for_different_k(a,b):
-    i=a
-    j=b
-    
-    while(i<=j):
-        print i
-        
-        logged_data =  read_logged_data()
-        non_logged_data =  read_non_logged_data()
-        
-        logged_per_70       =   (len(logged_data) * 70)/100
-        non_logged_per_70   =   (len(non_logged_data) * 70)/100
-        logged_size_array   =   compute_subset_size_array(logged_per_70, i)
-        non_logged_size_array =  compute_subset_size_array(non_logged_per_70, i)
-        print "logged size array=", logged_size_array, " non logged size array=", non_logged_size_array, "logged train indices=", logged_train_indices, "  non logged train indices=", non_logged_train_indices
-        
-        create_train_subsets_k(i, logged_size_array, non_logged_size_array, logged_train_indices, non_logged_test_indices,  logged_data, non_logged_data)
-
-        i=i+1
-    
-
-
 
 #=========== Run ========================#
 
