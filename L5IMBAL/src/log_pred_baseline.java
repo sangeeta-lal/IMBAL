@@ -62,8 +62,8 @@ public class log_pred_baseline
 	 
 
 	int iterations=10;	
-	String type = "catch";
-	//String type ="if";
+	//String type = "catch";
+	String type ="if";
 
 	String source_project="tomcat";	
 	//String source_project="cloudstack";	
@@ -273,7 +273,7 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 			      }
 			     }//else if
 
-			 System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 		 }//for
 

@@ -282,7 +282,7 @@ public Evaluation pred2(Classifier m1, double thres, int itr)
 			      }
 			     }//else if
 
-			 System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 		 }//for
 

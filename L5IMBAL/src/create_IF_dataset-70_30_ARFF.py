@@ -149,7 +149,7 @@ def write_in_file(file_obj, tuple_val):
     
     text_features =  text_features.strip()
     
-    print "writing if:"   
+    #print "writing if:"   
    
     
     #=== write the data in the file=====================#
