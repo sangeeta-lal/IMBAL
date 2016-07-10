@@ -37,8 +37,8 @@ password="1234"
 database="logging5_imbal"
 main_source_table = project+"_if_training5"  # from this table we have to take the data
 path = "F:\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\if\\"
-test_file_path = path+ project+"-arff\\if\\"
+train_file_path=path+project+"-arff2\\if\\"
+test_file_path = path+ project+"-arff2\\if\\"
 
 """
 
@@ -49,8 +49,8 @@ password="sangeetal"
 database="logging5_imbal"
 main_source_table = project+"_if_training5"  # from this table we have to take the data
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
-train_file_path=path+project+"-arff\\if\\"
-test_file_path = path+ project+"-arff\\if\\"
+train_file_path=path+project+"-arff2\\if\\"
+test_file_path = path+ project+"-arff2\\if\\"
 #"""
 
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
