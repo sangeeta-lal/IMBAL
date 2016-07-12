@@ -40,7 +40,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline 
  * */
-public class log_pred_baseline
+public class delete_log_pred_baseline
 {
 
 	/*
@@ -445,7 +445,7 @@ public static void main(String args[])
 	                          //  new RBFNetwork()                           
 	                            };
 	 
-		log_pred_baseline clp = new log_pred_baseline();
+		delete_log_pred_baseline clp = new delete_log_pred_baseline();
 		
 		
 		// Length of models

@@ -15,6 +15,7 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
+import weka.classifiers.functions.SMO;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
@@ -443,6 +444,7 @@ public static void main(String args[])
 	                           // new AdaBoostM1(),
 	                          //  new ADTree(),
 	                          //  new RBFNetwork()
+			  					new SMO()// SVM Classifier
 	                            };
 	 
 		log_pred_baseline_threshold_balance clp = new log_pred_baseline_threshold_balance();
