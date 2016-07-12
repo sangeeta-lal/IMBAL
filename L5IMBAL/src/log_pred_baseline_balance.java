@@ -435,14 +435,14 @@ public static void main(String args[])
 	
 	  
 	  Classifier models [] = {  new RandomForest(),
-			                    new Logistic(),
+			                   // new Logistic(),
 			  					new J48(),
-	                            new RandomTree(),
-	                            new ZeroR(),
-	                            new DecisionTable(),
-	                            new AdaBoostM1(),
-	                            new ADTree(),
-	                            new RBFNetwork()                           
+	                           // new RandomTree(),
+	                            //new ZeroR(),
+	                           // new DecisionTable(),
+	                           // new AdaBoostM1(),
+	                          //  new ADTree(),
+	                           // new RBFNetwork()                           
 	                            };
 	 
 		log_pred_baseline_balance clp = new log_pred_baseline_balance();

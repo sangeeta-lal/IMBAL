@@ -12,7 +12,7 @@ import utill5
 
     a. One training
     b. One testing
-    c. train -test size is 70-30%
+    c. train -test both are balanced
 ======================================================================================================"""
 
 #Project
@@ -201,7 +201,7 @@ def read_logged_data():
 
 
 #==========================================================================#
-#  This function will read all the non logged if blocks                 #
+#  This function will read all the non logged if blocks                    #
 #==========================================================================#    
 def read_non_logged_data():
     #===========Read the non logged if blocks===============================#

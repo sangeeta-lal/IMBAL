@@ -12,7 +12,7 @@ import utill5
 
     a. One training
     b. One testing
-    c. train -test size is 70-30%
+    c. train -test both are balanced
 ======================================================================================================"""
 
 #Project
