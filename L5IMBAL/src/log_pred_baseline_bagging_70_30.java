@@ -15,7 +15,9 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
+import weka.classifiers.functions.SMO;
 import weka.classifiers.meta.AdaBoostM1;
+import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.ADTree;
@@ -40,7 +42,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline 
  * */
-public class delete_log_pred_baseline
+public class log_pred_baseline_bagging_70_30
 {
 
 	/*
@@ -62,8 +64,8 @@ public class delete_log_pred_baseline
 	 
 
 	int iterations=10;	
-	//String type = "catch";
-	String type ="if";
+	String type = "catch";
+	//String type ="if";
 
 	String source_project="tomcat";	
 	//String source_project="cloudstack";	
@@ -71,7 +73,7 @@ public class delete_log_pred_baseline
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_"+type;
+	String result_table = "result_baseline_bagging_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
@@ -214,7 +216,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }*/
 
-public Evaluation pred2(Classifier model, double thres, int itr) 
+public Evaluation pred2(Classifier m1, double thres, int itr) 
 {
 	Evaluation evaluation = null;
 	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
@@ -222,8 +224,16 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 	try {
 	      
 		trainbegin = System.currentTimeMillis();
-		evaluation= new Evaluation(trains);		
+		
+		// Bagging
+		Bagging model =  new Bagging();	
+	    model.setClassifier(m1);
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
 		model.buildClassifier(trains);
+		
+		
 		
 		trainend = System.currentTimeMillis();
 		
@@ -435,17 +445,18 @@ public static void main(String args[])
 	
 	  
 	  Classifier models [] = {  new RandomForest(),
-			                  //  new Logistic(),
+			                    //new Logistic(),
 			  					new J48(),
-	                          //  new RandomTree(),
-	                            //new ZeroR(),
-	                          //  new DecisionTable(),
-	                          //  new AdaBoostM1(),
-	                           // new ADTree(),
-	                          //  new RBFNetwork()                           
+	                           // new RandomTree(),
+	                           // new ZeroR(),
+	                           // new DecisionTable(),
+	                           // new AdaBoostM1(),
+	                            //new ADTree(),
+	                           // new RBFNetwork()
+			  					new SMO()
 	                            };
 	 
-		delete_log_pred_baseline clp = new delete_log_pred_baseline();
+		log_pred_baseline_bagging_70_30 clp = new log_pred_baseline_bagging_70_30();
 		
 		
 		// Length of models
