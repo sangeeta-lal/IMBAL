@@ -15,6 +15,7 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
+import weka.classifiers.functions.SMO;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
@@ -40,7 +41,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline 
  * */
-public class log_pred_baseline_threshold
+public class log_pred_baseline_70_30
 {
 
 	/*
@@ -62,8 +63,8 @@ public class log_pred_baseline_threshold
 	 
 
 	int iterations=10;	
-	String type = "catch";
-	//String type ="if";
+	//String type = "catch";
+	String type ="if";
 
 	String source_project="tomcat";	
 	//String source_project="cloudstack";	
@@ -71,7 +72,7 @@ public class log_pred_baseline_threshold
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_threshold_"+type;
+	String result_table = "result_baseline_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
@@ -273,7 +274,7 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 			      }
 			     }//else if
 
-			// System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 		 }//for
 
@@ -437,15 +438,16 @@ public static void main(String args[])
 	  Classifier models [] = {  new RandomForest(),
 			                   // new Logistic(),
 			  					new J48(),
-	                            //new RandomTree(),
+	                           // new RandomTree(),
 	                            //new ZeroR(),
-	                            //new DecisionTable(),
-	                            //new AdaBoostM1(),
-	                            //new ADTree(),
-	                            //new RBFNetwork()
+	                           // new DecisionTable(),
+	                           // new AdaBoostM1(),
+	                          //  new ADTree(),
+	                           // new RBFNetwork()  
+			  					new SMO()
 	                            };
 	 
-		log_pred_baseline_threshold clp = new log_pred_baseline_threshold();
+		log_pred_baseline_70_30 clp = new log_pred_baseline_70_30();
 		
 		
 		// Length of models
@@ -454,7 +456,7 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+			for(double thres=0.5; thres==0.5; thres=thres+0.1)
 			{
 				clp.precision   = new double[clp.iterations];
 				clp.recall      = new double[clp.iterations];
