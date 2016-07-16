@@ -41,7 +41,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline 
  * */
-public class log_pred_baseline_threshold_balance_70_30
+public class log_pred_baseline_threshold_70_30
 {
 
 	/*
@@ -447,7 +447,7 @@ public static void main(String args[])
 			  					new SMO()// SVM Classifier
 	                            };
 	 
-		log_pred_baseline_threshold_balance_70_30 clp = new log_pred_baseline_threshold_balance_70_30();
+		log_pred_baseline_threshold_70_30 clp = new log_pred_baseline_threshold_70_30();
 		
 		
 		// Length of models
