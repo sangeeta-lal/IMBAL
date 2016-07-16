@@ -48,7 +48,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline +  Feature Selection
  * */
-public class log_pred_baseline_feature_Sel_balance
+public class log_pred_baseline_feature_Sel_70_30
 {
 
 	/*
@@ -79,12 +79,12 @@ public class log_pred_baseline_feature_Sel_balance
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_feature_selection_balance_"+type;
+	String result_table = "result_baseline_feature_selection_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
-   	String train_file_path = path+source_project+"-arff2"+"\\" +type+"\\train";
-   	String test_file_path = path +source_project +"-arff2"+"\\"+type+"\\test";
+   	String train_file_path = path+source_project+"-arff"+"\\" +type+"\\train";
+   	String test_file_path = path +source_project +"-arff"+"\\"+type+"\\test";
 		
 	//DataSource trainsource;
 	DataSource train_data_source;
@@ -937,7 +937,7 @@ public static void main(String args[])
 			  					new SMO()
 	                            };
 	 
-		log_pred_baseline_feature_Sel_balance clp = new log_pred_baseline_feature_Sel_balance();
+		log_pred_baseline_feature_Sel_70_30 clp = new log_pred_baseline_feature_Sel_70_30();
 		
 		
 		// Length of models
