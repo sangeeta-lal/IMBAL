@@ -569,7 +569,7 @@ public Evaluation pred2_relief(Classifier model, double thres, int itr, int perc
 public Evaluation pred2_oner(Classifier model, double thres, int itr, int percent_no_of_features) 
 {
 	Evaluation evaluation = null;
-	feature_selection_tech = "info-gain";
+	feature_selection_tech = "oner";
 	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
 	
 	
