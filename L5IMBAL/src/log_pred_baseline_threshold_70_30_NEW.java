@@ -76,7 +76,8 @@ public class log_pred_baseline_threshold_70_30_NEW
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_threshold_"+type;
+	//String result_table = "result_baseline_threshold_"+type;
+	String result_table = "temp_threshold";
 
 	
 	// we are using balanced files for with-in project logging prediction		
