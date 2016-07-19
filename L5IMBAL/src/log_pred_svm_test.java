@@ -502,3 +502,4 @@ public static void main(String args[])
 
 //Check this: https://weka.wikispaces.com/Use+WEKA+in+your+Java+code
 //http://stackoverflow.com/questions/9686562/smo-confidence-measure-in-weka
+http://stackoverflow.com/questions/38461288/difference-in-default-and-cutomised-weka-smo-output

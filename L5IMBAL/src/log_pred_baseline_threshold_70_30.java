@@ -15,7 +15,7 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
-import weka.classifiers.functions.SMO;
+//import weka.classifiers.functions.SMO;  // I am using SMO.Java
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
@@ -40,6 +40,10 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
  * 2. Version  =  baseline 
+ * 3. Using SMO. java in whihc I have modified following two things:
+ *   1. m_fitLogisticModels = **true.** 
+ *   2. smo.buildClassifier(train, cl1, cl2, **true**, -1, -1)
+
  * */
 public class log_pred_baseline_threshold_70_30
 {
