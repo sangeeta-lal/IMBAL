@@ -49,7 +49,7 @@ public class log_pred_baseline_threshold_70_30
 {
 
 	/*
-	 String path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
+	 String path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\" ;
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
 	 String url = "jdbc:mysql://localhost:3307/";
