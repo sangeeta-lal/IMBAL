@@ -15,7 +15,7 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
-//import weka.classifiers.functions.SMO;  // Commenting because I am using modified SMO. java
+//import weka.classifiers.functions.SMO;  // I am using SMO.Java
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
@@ -39,14 +39,13 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 /*
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
- * 2. Version  =  baseline
+ * 2. Version  =  baseline 
  * 3. Using SMO. java in whihc I have modified following two things:
  *   1. m_fitLogisticModels = **true.** 
  *   2. smo.buildClassifier(train, cl1, cl2, **true**, -1, -1)
 
- *  
  * */
-public class log_pred_baseline_threshold_balance
+public class log_pred_baseline_threshold_70_30_balance
 {
 
 	/*
@@ -78,6 +77,7 @@ public class log_pred_baseline_threshold_balance
 	
 	String db_name ="logging5_imbal";
 	String result_table = "result_baseline_threshold_balance_"+type;
+	
 
 	
 	// we are using balanced files for with-in project logging prediction		
@@ -100,19 +100,19 @@ public class log_pred_baseline_threshold_balance
 	//Connection conn=null;	
 	//java.sql.Statement stmt = null;
    
-	double precision[];
-	double recall[];
-	double fmeasure[];
-	double accuracy[];
-	double roc_auc[];
+	double precision[][];
+	double recall[][];
+	double fmeasure[][];
+	double accuracy[][];
+	double roc_auc[][];
 	
 	long trainbegin ;
 	long trainend ;
 	long testbegin ;
 	long testend ;
 	
-	long train_time[] ;
-	long test_time[];
+	long train_time[][] ;
+	long test_time[][];
 	
 	double no_of_features[];
 	
@@ -220,10 +220,10 @@ public void create_train_and_test_split(double train_size, double test_size)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }*/
 
-public Evaluation pred2(Classifier model, double thres, int itr) 
+public Evaluation pred2_thres(Classifier model,  int itr) 
 {
 	Evaluation evaluation = null;
-	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
 	
 	try {
 	      
@@ -233,32 +233,37 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 		
 		trainend = System.currentTimeMillis();
 		
-		//evaluation.evaluateModel(model, tests);	
-		testbegin = System.currentTimeMillis();
-		for (int j = 0; j < tests.numInstances(); j++) 
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
 		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
 			     
-			 double score[] ;
-			 Instance curr  =  tests.instance(j);  
-			 double actual = curr.classValue();
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
 			 
 			  
-			score= model.distributionForInstance(curr);
+				score= model.distributionForInstance(curr);
 				 
 			 
-			 // Find index of the model giving maximum value for the test instance
+				// Find index of the model giving maximum value for the test instance
 			 
-			 double predicted = 0;
-		     if ( score[1] <= thres) 
-		     {
-		      predicted = 0;
-		     } else 
-		     {
-		      predicted = 1;
-		     }
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
 			 
-		     if (actual == 1) 
-		       {
+				if (actual == 1) 
+				{
 			      if (predicted == 1) 
 			      {
 			       tp++;
@@ -279,28 +284,35 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 			      }
 			     }//else if
 
-			// System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
-		 }//for
+		   }//for
 
 		
-	 testend = System.currentTimeMillis();
+			testend = System.currentTimeMillis();
 
-	 util5_met ut =  new util5_met();
+			util5_met ut =  new util5_met();
 	 
-	 precision[itr]=ut.compute_precision(tp, fp, tn, fn);
-	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
-	fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
-	accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
-	roc_auc[itr] =0.0;// call some method here if possible	
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
 	
-	train_time[itr] = trainend -trainbegin;
-	test_time[itr] = testend-testbegin;
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
 	
-	no_of_features[itr] =  trains.numAttributes();
+			no_of_features[itr] =  trains.numAttributes();
 
-		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
 	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
 	
 	} catch (Exception e) {
 	
@@ -452,7 +464,7 @@ public static void main(String args[])
 			  					new SMO()// SVM Classifier
 	                            };
 	 
-		log_pred_baseline_threshold_balance clp = new log_pred_baseline_threshold_balance();
+		log_pred_baseline_threshold_70_30_balance clp = new log_pred_baseline_threshold_70_30_balance();
 		
 		
 		// Length of models
@@ -461,16 +473,16 @@ public static void main(String args[])
 			
 			String classifier_name =  models[j].getClass().getSimpleName();
 			
-			for(double thres=0.1; thres<=0.9; thres=thres+0.1)
-			{
-				clp.precision   = new double[clp.iterations];
-				clp.recall      = new double[clp.iterations];
-				clp.accuracy    = new double[clp.iterations];
-				clp.fmeasure    = new double[clp.iterations];	
-				clp.roc_auc     = new double[clp.iterations];
+			//for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+			//{
+				clp.precision   = new double[clp.iterations][9];
+				clp.recall      = new double[clp.iterations][9];
+				clp.accuracy    = new double[clp.iterations][9];
+				clp.fmeasure    = new double[clp.iterations][9];	
+				clp.roc_auc     = new double[clp.iterations][9];
 			    
-				clp.train_time= new long[clp.iterations];
-				clp.test_time= new long[clp.iterations];
+				clp.train_time= new long[clp.iterations][9];
+				clp.test_time= new long[clp.iterations][9];
 				
 				clp.no_of_features = new double[clp.iterations];
 			
@@ -480,7 +492,7 @@ public static void main(String args[])
 				   
 				    	clp.pre_process_data();
 					
-				    	clp.result = clp.pred2(models[j], thres,i);				
+				    	clp.result = clp.pred2_thres(models[j],i);				
 					
 				    	/*clp.precision[i]         =   clp.result.precision(1)*100;
 				    	clp.recall[i]            =   clp.result.recall(1)*100;
@@ -492,9 +504,36 @@ public static void main(String args[])
 					}
 					  
 				
-			   clp.compute_avg_stdev_and_insert(classifier_name, thres, clp.precision, clp.recall, clp.accuracy, clp.fmeasure , clp.roc_auc, clp.train_time, clp.test_time );
+				// define some temporary parameters
+				double temp_thres= 0.1;
+				double temp_precision[] =  new double[10];
+				double temp_recall[]    =  new double[10];
+				double temp_fmeasure[] 	=  new double[10];
+				double temp_accuracy[]	=  new double[10];
+				double temp_roc_auc[] 	=  new double[10];
+				
+				long temp_train_time[] =  new long[10];
+				long temp_test_time[]  = new long[10];
+				
+				for(int k=0; k<9; k++)
+				{
+					for(int l = 0; l<clp.iterations; l++)
+					{
+					  temp_precision[l]  = clp.precision[l][k];	
+					  temp_recall[l]     = clp.recall[l][k];	
+					  temp_fmeasure[l]   = clp.fmeasure[l][k];						
+					  temp_accuracy[l]   = clp.accuracy[l][k];						
+					  temp_roc_auc[l]    = clp.roc_auc[l][k];	
+						
+					  temp_train_time[l] = clp.train_time[l][k];
+					  temp_test_time[l]  =  clp.test_time[l][k];
+					  
+					}
+			      clp.compute_avg_stdev_and_insert(classifier_name, temp_thres, temp_precision, temp_recall, temp_accuracy, temp_fmeasure , temp_roc_auc, temp_train_time,temp_test_time );
 			   
-			} // thres
+			      temp_thres  =  temp_thres +0.1;
+				}
+			//} // thres
 		}		
 		
 		

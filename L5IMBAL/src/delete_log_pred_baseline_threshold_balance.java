@@ -15,7 +15,7 @@ import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
-//import weka.classifiers.functions.SMO;  // I am using SMO.Java
+//import weka.classifiers.functions.SMO;  // Commenting because I am using modified SMO. java
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
@@ -39,17 +39,18 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 /*
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using baseline classifier
- * 2. Version  =  baseline 
+ * 2. Version  =  baseline
  * 3. Using SMO. java in whihc I have modified following two things:
  *   1. m_fitLogisticModels = **true.** 
  *   2. smo.buildClassifier(train, cl1, cl2, **true**, -1, -1)
 
+ *  
  * */
-public class log_pred_baseline_threshold_70_30
+public class delete_log_pred_baseline_threshold_balance
 {
 
 	/*
-	 String path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\" ;
+	 String path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
 	 String user_name =  "sangeetal";
 	 String password = "sangeetal";
 	 String url = "jdbc:mysql://localhost:3307/";
@@ -76,12 +77,12 @@ public class log_pred_baseline_threshold_70_30
 	
 	
 	String db_name ="logging5_imbal";
-	String result_table = "result_baseline_threshold_"+type;
+	String result_table = "result_baseline_threshold_balance_"+type;
 
 	
 	// we are using balanced files for with-in project logging prediction		
-   	String train_file_path = path+source_project+"-arff"+"\\" +type+"\\train";
-   	String test_file_path = path +source_project +"-arff"+"\\"+type+"\\test";
+   	String train_file_path = path+source_project+"-arff2"+"\\" +type+"\\train";
+   	String test_file_path = path +source_project +"-arff2"+"\\"+type+"\\test";
 		
 	//DataSource trainsource;
 	DataSource train_data_source;
@@ -298,8 +299,7 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 	
 	no_of_features[itr] =  trains.numAttributes();
 
-		System.out.println("Pre="+ precision[itr] +  " thres="+thres+   " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
-		 
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
 	
 	
 	} catch (Exception e) {
@@ -452,7 +452,7 @@ public static void main(String args[])
 			  					new SMO()// SVM Classifier
 	                            };
 	 
-		log_pred_baseline_threshold_70_30 clp = new log_pred_baseline_threshold_70_30();
+		delete_log_pred_baseline_threshold_balance clp = new delete_log_pred_baseline_threshold_balance();
 		
 		
 		// Length of models
