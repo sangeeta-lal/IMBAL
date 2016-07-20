@@ -298,7 +298,8 @@ public Evaluation pred2(Classifier model, double thres, int itr)
 	
 	no_of_features[itr] =  trains.numAttributes();
 
-		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+		System.out.println("Pre="+ precision[itr] +  " thres="+thres+   " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+		 
 	
 	
 	} catch (Exception e) {

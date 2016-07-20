@@ -11,14 +11,14 @@ import matplotlib.patches as mpatches
 ========================================================================"""
 
 #"""
-path = "F:\\Research\\L5IMBAL\\result-70-30\\"
+path = "F:\\Research\\L5IMBAL\\result\\"
 
 """
-path = "E:\\Sangeeta\\Research\\L5IMBAL\\result-70-30\\"
+path = "E:\\Sangeeta\\Research\\L5IMBAL\\result\\"
 """
 
 def draw_line_graph(j48,rf, svm, x_axis, project, type):
-    print "Draw something"
+    print "Draw line graph"
 
     plt.close()
     ax= plt.subplot()
@@ -70,7 +70,8 @@ draw_line_graph(j48, rf, svm, x_axis, "Tomcat", "catch")
 #==============================================#
 j48=[ 84.32, 84.75, 84.68, 84.51, 84.51, 84.51, 84.4, 84.25, 82.04]
 rf=[ 80.1,83.63, 85.92, 86.98, 85.98, 81.6, 72.5, 72.5, 57.13]
-svm=j48
+svm=[83.95, 84.97, 85.08, 84.8, 84.14, 83.35, 82.24, 80.24, 76.55]
+
 x_axis = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 draw_line_graph(j48, rf, svm, x_axis, "CloudStack", "catch")
 
@@ -80,9 +81,9 @@ draw_line_graph(j48, rf, svm, x_axis, "CloudStack", "catch")
 #==============================================#
 j48=[ 64.23, 65.09, 64.57, 64.27, 64.27, 64.26, 63.86, 62.99, 55.05]
 rf=[ 62.15, 67.48, 69.32, 66.8, 59.99, 49.79, 38.63, 38.63, 26.28]
+svm=[63.99, 66.98, 67.9, 67.79, 67.33, 66.01, 64.04, 60.67, 52.7]
 
-svm=j48
 x_axis = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-draw_line_graph(j48, rf, svm, x_axis, "Hadoop", type)
+draw_line_graph(j48, rf, svm, x_axis, "Hadoop", "catch")
 
 

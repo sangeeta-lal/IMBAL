@@ -223,7 +223,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 public Evaluation pred2_thres(Classifier model,  int itr) 
 {
 	Evaluation evaluation = null;
-	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
 	
 	try {
 	      
@@ -236,6 +236,8 @@ public Evaluation pred2_thres(Classifier model,  int itr)
 		int thres_itr= 0;
 		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
 		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
 			//evaluation.evaluateModel(model, tests);	
 			testbegin = System.currentTimeMillis();
 			for (int j = 0; j < tests.numInstances(); j++) 
@@ -282,9 +284,9 @@ public Evaluation pred2_thres(Classifier model,  int itr)
 			      }
 			     }//else if
 
-			// System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
-		 }//for
+		   }//for
 
 		
 			testend = System.currentTimeMillis();
@@ -292,10 +294,15 @@ public Evaluation pred2_thres(Classifier model,  int itr)
 			util5_met ut =  new util5_met();
 	 
 			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
 			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
 	
 			train_time[itr][thres_itr] = trainend -trainbegin;
 			test_time[itr][thres_itr] = testend-testbegin;
