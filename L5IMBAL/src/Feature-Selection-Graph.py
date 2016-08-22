@@ -185,3 +185,135 @@ symmetrical=[59.1, 61.84, 63.56, 65.39, 65.93, 66.42, 66.49, 66.63, 67.01, 67.16
 x_axis = [10,20,30, 40,50,60,70,80,90,100]
 draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"svm", "Hadoop", "Catch")
 
+
+
+
+
+#===============IF-Block===========================#
+#         Tomcat                                   #
+#==================================================#
+#  1. J48
+#----------------------------------------------#
+gain_ratio=[
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Tomcat", "If")
+
+
+#=============IF-Block=========================#
+#  2. RF
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Tomcat", "If")
+
+
+#=============IF-Block=========================#
+#  3. SVM
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Tomcat", "If")
+
+
+
+#===============IF-Block===========================#
+#         CloudStack                                 #
+#==================================================#
+#  1. J48
+#----------------------------------------------#
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "CloudStack", "If")
+
+
+#=============IF-Block=========================#
+#  2. RF
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "CloudStack", "If")
+
+
+#=============IF-Block=========================#
+#  3. SVM
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "CloudStack", "If")
+
+
+#===============IF-Block===========================#
+#         Hadoop                                #
+#==================================================#
+#  1. J48
+#----------------------------------------------#
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Hadoop", "If")
+
+
+#=============IF-Block=========================#
+#  2. RF
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Hadoop", "If")
+
+
+#=============IF-Block=========================#
+#  3. SVM
+#----------------------------------------------#
+
+gain_ratio=[]
+information_gain=[ 
+oner=[
+relief=[
+symmetrical=[
+
+x_axis = [10,20,30, 40,50,60,70,80,90,100]
+draw_line_graph(gain_ratio, information_gain, oner, relief, symmetrical, x_axis,"", "Hadoop", "If")
