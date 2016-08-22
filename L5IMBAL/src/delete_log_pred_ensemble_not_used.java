@@ -37,7 +37,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * @Author: Sangeeta
  * 1. This is the simple log prediction code that is used to predict logging using ensemble of classifier
  * */
-public class log_pred_ensemble_not_used
+public class delete_log_pred_ensemble_not_used
 {
 
 	/*
@@ -442,7 +442,7 @@ public static void main(String args[])
 		rf[i]= new RandomForest(); 
 	 }
 	 
-	 log_pred_ensemble_not_used clp = new log_pred_ensemble_not_used();	
+	 delete_log_pred_ensemble_not_used clp = new delete_log_pred_ensemble_not_used();	
 	 clp.ensemble_prediction(rf);
 		
 	}

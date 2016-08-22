@@ -45,7 +45,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  *   2. smo.buildClassifier(train, cl1, cl2, **true**, -1, -1)
 
  * */
-public class log_pred_baseline_threshold_70_30_balance_NEW
+public class log_pred_baseline_threshold_balance_NEW
 {
 
 	/*
@@ -464,7 +464,7 @@ public static void main(String args[])
 			  					new SMO()// SVM Classifier
 	                            };
 	 
-		log_pred_baseline_threshold_70_30_balance_NEW clp = new log_pred_baseline_threshold_70_30_balance_NEW();
+		log_pred_baseline_threshold_balance_NEW clp = new log_pred_baseline_threshold_balance_NEW();
 		
 		
 		// Length of models
