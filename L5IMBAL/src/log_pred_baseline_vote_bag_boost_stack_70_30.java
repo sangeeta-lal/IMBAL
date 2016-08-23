@@ -589,9 +589,8 @@ public Evaluation pred2_stack(Classifier m1[], double thres, int itr)
 		  stack_model.buildClassifier(trains);
 	      evaluation= new Evaluation(trains);	
 
-		
-		
-		trainend = System.currentTimeMillis();
+				
+		  trainend = System.currentTimeMillis();
 		
 		//evaluation.evaluateModel(model, tests);	
 		testbegin = System.currentTimeMillis();
@@ -648,11 +647,11 @@ public Evaluation pred2_stack(Classifier m1[], double thres, int itr)
 
 	 util5_met ut =  new util5_met();
 	 
-	 precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
 	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
-	fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
-	accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
-	roc_auc[itr] =0.0;// call some method here if possible	
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
 	
 	train_time[itr] = trainend -trainbegin;
 	test_time[itr] = testend-testbegin;
@@ -671,6 +670,629 @@ public Evaluation pred2_stack(Classifier m1[], double thres, int itr)
 	
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }
+
+
+
+//Bagging rule
+public Evaluation pred2_bagging_J48(double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "bagging-j48";
+		
+		// Bagging
+		Bagging model =  new Bagging();	
+	    model.setClassifier(new J48());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+
+//
+//Bagging rule
+public Evaluation pred2_bagging_rf( double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "bagging-rf";
+		
+		// Bagging
+		Bagging model =  new Bagging();	
+	    model.setClassifier(new RandomForest());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Bagging rule
+public Evaluation pred2_bagging_svm( double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "bagging-svm";
+		
+		// Bagging
+		Bagging model =  new Bagging();	
+	    model.setClassifier(new SMO());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+
+//Bagging rule
+public Evaluation pred2_boosting_J48( double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "boosting-j48";
+		
+		// Boosting
+		AdaBoostM1 model =  new AdaBoostM1();	
+	    model.setClassifier(new SMO());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Boosting rule
+public Evaluation pred2_boosting_rf( double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "boosting-rf";
+		
+		// Boosting
+		AdaBoostM1 model =  new AdaBoostM1();	
+	    model.setClassifier(new SMO());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Boosting rule
+public Evaluation pred2_boosting_svm( double thres, int itr) 
+{
+	Evaluation evaluation = null;
+	double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		vote_type= "boosting-svm";
+		
+		// Bagging
+		AdaBoostM1 model =  new AdaBoostM1();
+	    model.setClassifier(new SMO());
+	    model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		model.buildClassifier(trains);
+		
+				
+		trainend = System.currentTimeMillis();
+		
+		//evaluation.evaluateModel(model, tests);	
+		testbegin = System.currentTimeMillis();
+		for (int j = 0; j < tests.numInstances(); j++) 
+		 {
+			     
+			 double score[] ;
+			 Instance curr  =  tests.instance(j);  
+			 double actual = curr.classValue();
+			 
+			  
+			score= model.distributionForInstance(curr);
+				 
+			 // Find index of the model giving maximum value for the test instance
+			 
+			 double predicted = 0;
+		     if ( score[1] <= thres) 
+		     {
+		      predicted = 0;
+		     } else 
+		     {
+		      predicted = 1;
+		     }
+			 
+		     if (actual == 1) 
+		       {
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			 //System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		 }//for
+
+		
+	 testend = System.currentTimeMillis();
+
+	 util5_met ut =  new util5_met();
+	 
+	  precision[itr]=ut.compute_precision(tp, fp, tn, fn);
+	  recall[itr]= ut.compute_recall(tp, fp, tn, fn);
+	  fmeasure[itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+	  accuracy[itr]=ut.compute_accuracy(tp, fp, tn, fn);
+	  roc_auc[itr] =0.0;// call some method here if possible	
+	
+	train_time[itr] = trainend -trainbegin;
+	test_time[itr] = testend-testbegin;
+	
+	no_of_features[itr] =  trains.numAttributes();
+
+		//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+
 
 public Connection initdb(String db_name)
 {
@@ -820,7 +1442,7 @@ public static void main(String args[])
 				
 				clp.no_of_features = new double[clp.iterations];
 			
-				String classifier_name = "J48-RF-SVM";
+				String classifier_name = ""; 
 				for(int i=0; i<clp.iterations; i++)
 					{
 				    	clp.read_file(i+1);
@@ -830,11 +1452,37 @@ public static void main(String args[])
 				    	
 					// Note:  Select only one of the voting technique from following three
 				    	
-				   //  clp.result = clp.pred2_maj_vote(models, thres,i);		
-				     //clp.result = clp.pred2_avg_vote(models, thres,i);			
+				    // classifier_name = "J48-RF-SVM";	
+				    // clp.result = clp.pred2_maj_vote(models, thres,i);	
+				     
+				    //	 classifier_name = "J48-RF-SVM";
+				     //clp.result = clp.pred2_avg_vote(models, thres,i);
+				    	
+				    	// classifier_name = "J48-RF-SVM";	
 				     //clp.result = clp.pred2_max_vote(models, thres,i);			
 					
-				     clp.result   = clp.pred2_stack(models, thres, i);
+				    //	 classifier_name = "J48-RF-SVM";	
+				    // clp.result   = clp.pred2_stack(models, thres, i);
+				     
+				     //classifier_name = "J48";
+				    // clp.result =  clp.pred2_bagging_j48( thres, i);
+				     
+				    // classifier_name = "RF";
+				    // clp.result = clp.pred2_bagging_rf();
+				     
+				    // classifier_name = "SVM";
+				   //  clp.result  = clp.pred2_bagging_svm();
+				     
+				     
+				     //classifier_name = "J48";
+				   //  clp.result =  clp.pred2_boosting_j48( thres, i);
+				     
+				    // classifier_name = "RF";
+				    // clp.result = clp.pred2_boosting_rf(thres, i);
+				     
+				    // classifier_name = "SVM";
+				   //  clp.result  = clp.pred2_boosting_svm(thres, i);
+				     
 						
 					}
 					  
