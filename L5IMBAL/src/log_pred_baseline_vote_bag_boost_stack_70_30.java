@@ -1465,17 +1465,17 @@ public static void main(String args[])
 				    // clp.result   = clp.pred2_stack(models, thres, i);
 				     
 				     //classifier_name = "J48";
-				    // clp.result =  clp.pred2_bagging_j48( thres, i);
+				    // clp.result =  clp.pred2_bagging_J48( thres, i);
 				     
-				    // classifier_name = "RF";
-				    // clp.result = clp.pred2_bagging_rf();
+				     classifier_name = "RF";
+				     clp.result = clp.pred2_bagging_rf(thres, i);
 				     
 				    // classifier_name = "SVM";
-				   //  clp.result  = clp.pred2_bagging_svm();
+				   //  clp.result  = clp.pred2_bagging_svm( thres, i);
 				     
 				     
 				     //classifier_name = "J48";
-				   //  clp.result =  clp.pred2_boosting_j48( thres, i);
+				   //  clp.result =  clp.pred2_boosting_J48( thres, i);
 				     
 				    // classifier_name = "RF";
 				    // clp.result = clp.pred2_boosting_rf(thres, i);
