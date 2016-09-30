@@ -12,6 +12,7 @@ import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.OneRAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.attributeSelection.ReliefFAttributeEval;
+import weka.attributeSelection.SymmetricalUncertAttributeEval;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
@@ -59,7 +60,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 
 
  * */
-public class log_pred_baseline_LOGIM_70_30_oner
+public class log_pred_baseline_LOGIM_70_30_symmtrical
 {
 
 	/*
@@ -235,7 +236,7 @@ public void create_train_and_test_split(double train_size, double test_size)
 }*/
 
 //Mjority Vote
-public Evaluation pred2_oner_maj_vote( int itr, int p_of_features) 
+public Evaluation pred2_symmetrical_maj_vote( int itr, int p_of_features) 
 {
 
 	
@@ -254,9 +255,9 @@ public Evaluation pred2_oner_maj_vote( int itr, int p_of_features)
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
 	      
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
-	    	    	     
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
+	     	    	     
 	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
@@ -376,7 +377,7 @@ public Evaluation pred2_oner_maj_vote( int itr, int p_of_features)
 
 
 // Average Vote
-public Evaluation pred2_oner_avg_vote( int itr, int p_of_features) 
+public Evaluation pred2_symmetrical_avg_vote( int itr, int p_of_features) 
 {
 
 	
@@ -393,8 +394,8 @@ public Evaluation pred2_oner_avg_vote( int itr, int p_of_features)
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
 	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
@@ -513,7 +514,7 @@ public Evaluation pred2_oner_avg_vote( int itr, int p_of_features)
 
 
 //max Vote
-public Evaluation pred2_oner_max_vote( int itr, int p_of_features) 
+public Evaluation pred2_symmetrical_max_vote( int itr, int p_of_features) 
 {
 
 
@@ -531,8 +532,8 @@ public Evaluation pred2_oner_max_vote( int itr, int p_of_features)
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
 	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
@@ -651,7 +652,7 @@ public Evaluation pred2_oner_max_vote( int itr, int p_of_features)
 
 
 //Stacking Vote
-public Evaluation pred2_oner_stack( int itr, int p_of_features) 
+public Evaluation pred2_symmetrical_stack( int itr, int p_of_features) 
 {
 
 
@@ -669,9 +670,9 @@ public Evaluation pred2_oner_stack( int itr, int p_of_features)
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
-	    attributeSelection.setSearch(ranker); 
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
+	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
@@ -798,7 +799,7 @@ public Evaluation pred2_oner_stack( int itr, int p_of_features)
 
 
 //Bagging Vote
-public Evaluation pred2_oner_bagging( int itr, int p_of_features, Classifier  classif) 
+public Evaluation pred2_symmetrical_bagging( int itr, int p_of_features, Classifier  classif) 
 {
 
 
@@ -816,9 +817,10 @@ public Evaluation pred2_oner_bagging( int itr, int p_of_features, Classifier  cl
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
-	    attributeSelection.setSearch(ranker); 
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
+	     
+	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
@@ -937,7 +939,7 @@ public Evaluation pred2_oner_bagging( int itr, int p_of_features, Classifier  cl
 
 
 //Boosting Vote
-public Evaluation pred2_oner_boosting( int itr, int p_of_features, Classifier  classif) 
+public Evaluation pred2_symmetrical_boosting( int itr, int p_of_features, Classifier  classif) 
 {
 
 
@@ -955,9 +957,10 @@ public Evaluation pred2_oner_boosting( int itr, int p_of_features, Classifier  c
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
-	     OneRAttributeEval Eval = new OneRAttributeEval(); 
-	     attributeSelection.setEvaluator(Eval);  
-	    attributeSelection.setSearch(ranker); 
+	     SymmetricalUncertAttributeEval Eval = new SymmetricalUncertAttributeEval(); 
+	     attributeSelection.setEvaluator(Eval); 
+	     
+	     attributeSelection.setSearch(ranker); 
 	     attributeSelection.setInputFormat(trains); 
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
@@ -1201,10 +1204,10 @@ public static void main(String args[])
 	{
 	
 	 
-		log_pred_baseline_LOGIM_70_30_oner clp = new log_pred_baseline_LOGIM_70_30_oner();
+		log_pred_baseline_LOGIM_70_30_symmtrical clp = new log_pred_baseline_LOGIM_70_30_symmtrical();
 		String classifier_name= "";
 		String ensemble_tech = "";
-		String feature_selection_tech= "oner";
+		String feature_selection_tech= "symmetrical";
 			
 			for(int p_of_features=10; p_of_features<=100; p_of_features=p_of_features+10)
 			{
@@ -1227,44 +1230,44 @@ public static void main(String args[])
 				    	
 				    	 classifier_name = "J48-RF-SVM";
 				    	 ensemble_tech= "Majority Vote";
-					     clp.result = clp.pred2_oner_maj_vote(i, p_of_features);	
+					     clp.result = clp.pred2_symmetrical_maj_vote(i, p_of_features);	
 				    
 					     classifier_name = "J48-RF-SVM";
 				    	 ensemble_tech= "Average Vote";
-					     clp.result = clp.pred2_oner_avg_vote(i, p_of_features);	
+					     clp.result = clp.pred2_symmetrical_avg_vote(i, p_of_features);	
 				    
 				    	  classifier_name = "J48-RF-SVM";
 				    	  ensemble_tech= "Max Vote";
-					      clp.result = clp.pred2_oner_max_vote(i, p_of_features);	
+					      clp.result = clp.pred2_symmetrical_max_vote(i, p_of_features);	
 				    
 				    	   classifier_name = "J48-RF-SVM";
 				    	   ensemble_tech= "Stacking";
-					       clp.result = clp.pred2_oner_stack(i, p_of_features);	
+					       clp.result = clp.pred2_symmetrical_stack(i, p_of_features);	
 				   
 					     
 				    	  classifier_name = "J48";
 				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_oner_bagging(i, p_of_features, new J48());	
+					      clp.result = clp.pred2_symmetrical_bagging(i, p_of_features, new J48());	
 					      
 					      classifier_name = "RF";
 				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_oner_bagging(i, p_of_features, new RandomForest());	
+					      clp.result = clp.pred2_symmetrical_bagging(i, p_of_features, new RandomForest());	
 					     
 					      classifier_name = "SMO";
 				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_oner_bagging(i, p_of_features, new SMO());	
+					      clp.result = clp.pred2_symmetrical_bagging(i, p_of_features, new SMO());	
 					    
 					      classifier_name = "J48";
 				    	  ensemble_tech= "BoosTing";
-					      clp.result = clp.pred2_oner_boosting(i, p_of_features, new J48());	
+					      clp.result = clp.pred2_symmetrical_boosting(i, p_of_features, new J48());	
 					    
 					      classifier_name = "RF";
 				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_oner_boosting(i, p_of_features, new RandomForest());	
+					      clp.result = clp.pred2_symmetrical_boosting(i, p_of_features, new RandomForest());	
 					     
 					      classifier_name = "SMO";
 				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_oner_boosting(i, p_of_features, new SMO());	 
+					      clp.result = clp.pred2_symmetrical_boosting(i, p_of_features, new SMO());	 
 						
 					}
 					  
