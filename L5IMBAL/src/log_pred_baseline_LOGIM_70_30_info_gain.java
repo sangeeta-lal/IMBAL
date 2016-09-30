@@ -1206,9 +1206,9 @@ public static void main(String args[])
 		log_pred_baseline_LOGIM_70_30_info_gain clp = new log_pred_baseline_LOGIM_70_30_info_gain();
 		String classifier_name= "";
 		String ensemble_tech = "";
-		String feature_selection_tech= "";
+		String feature_selection_tech= "info-gain";
 			
-			for(int p_of_features=100; p_of_features<=100; p_of_features=p_of_features+10)
+			for(int p_of_features=10; p_of_features<=100; p_of_features=p_of_features+10)
 			{
 				clp.precision   = new double[clp.iterations][9];
 				clp.recall      = new double[clp.iterations][9];
@@ -1266,9 +1266,7 @@ public static void main(String args[])
 					     
 					      classifier_name = "SMO";
 				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	
-					    
-					    
+					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	 
 						
 					}
 					  
