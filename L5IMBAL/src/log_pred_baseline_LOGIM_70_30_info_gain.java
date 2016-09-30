@@ -19,6 +19,9 @@ import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.RBFNetwork;
 //import weka.classifiers.functions.SMO;  // I am using SMO.Java
 import weka.classifiers.meta.AdaBoostM1;
+import weka.classifiers.meta.Bagging;
+import weka.classifiers.meta.Stacking;
+import weka.classifiers.meta.Vote;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.ADTree;
@@ -28,6 +31,7 @@ import weka.classifiers.trees.RandomTree;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SelectedTag;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -227,7 +231,8 @@ public void create_train_and_test_split(double train_size, double test_size)
 	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
 }*/
 
-public Evaluation pred2_info_gain_rf( int itr, int p_of_features) 
+//Mjority Vote
+public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features) 
 {
 
 	// classifier_name = "J48-RF-SVM";	
@@ -258,11 +263,18 @@ public Evaluation pred2_info_gain_rf( int itr, int p_of_features)
 		//======================================//
 	      
 		trainbegin = System.currentTimeMillis();
-		evaluation= new Evaluation(trains);	
 		
-		RandomForest model =  new RandomForest();
+		//================================//
 		
-		model.buildClassifier(trains);
+		Vote voter =  new Vote();  
+		Classifier classif[] = {new RandomForest(), new J48(), new SMO()};
+		voter.setClassifiers(classif); 
+		voter.setCombinationRule(new SelectedTag(Vote.MAJORITY_VOTING_RULE, Vote.TAGS_RULES));
+		evaluation= new Evaluation(trains);
+	    voter.buildClassifier(trains);
+		
+		//===============================//
+		
 		
 		trainend = System.currentTimeMillis();
 		
@@ -281,7 +293,7 @@ public Evaluation pred2_info_gain_rf( int itr, int p_of_features)
 				double actual = curr.classValue();
 			 
 			  
-				score= model.distributionForInstance(curr);
+				score= voter.distributionForInstance(curr);
 				 
 			 
 				// Find index of the model giving maximum value for the test instance
@@ -359,6 +371,712 @@ public Evaluation pred2_info_gain_rf( int itr, int p_of_features)
 
 
 
+// Average Vote
+public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features) 
+{
+
+	// classifier_name = "J48-RF-SVM";	
+	// Feature selection = "info gain";
+	
+	Evaluation evaluation = null;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+		
+		//======================================//
+		//Newly added code:  Feature selection  //
+		
+		 int total_features = trains.numAttributes();
+		 int select_feature_count =  (total_features*p_of_features)/100;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(select_feature_count-1);
+	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
+	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		//======================================//
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		//================================//
+		
+		Vote voter =  new Vote();  
+		Classifier classif[] = {new RandomForest(), new J48(), new SMO()};
+		voter.setClassifiers(classif); 
+		voter.setCombinationRule(new SelectedTag(Vote.AVERAGE_RULE, Vote.TAGS_RULES));
+		evaluation= new Evaluation(trains);
+	    voter.buildClassifier(trains);
+		
+		//===============================//
+		
+		
+		trainend = System.currentTimeMillis();
+		
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
+			     
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
+			 
+			  
+				score= voter.distributionForInstance(curr);
+				 
+			 
+				// Find index of the model giving maximum value for the test instance
+			 
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
+			 
+				if (actual == 1) 
+				{
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		   }//for
+
+		
+			testend = System.currentTimeMillis();
+
+			util5_met ut =  new util5_met();
+	 
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+	
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
+	
+			no_of_features[itr] =  trains.numAttributes();
+
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//max Vote
+public Evaluation pred2_info_gain_max_vote( int itr, int p_of_features) 
+{
+
+	// classifier_name = "J48-RF-SVM";	
+	// Feature selection = "info gain";
+	
+	Evaluation evaluation = null;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+		
+		//======================================//
+		//Newly added code:  Feature selection  //
+		
+		 int total_features = trains.numAttributes();
+		 int select_feature_count =  (total_features*p_of_features)/100;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(select_feature_count-1);
+	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
+	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		//======================================//
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		//================================//
+		
+		Vote voter =  new Vote();  
+		Classifier classif[] = {new RandomForest(), new J48(), new SMO()};
+		voter.setClassifiers(classif); 
+		voter.setCombinationRule(new SelectedTag(Vote.MAX_RULE, Vote.TAGS_RULES));
+		evaluation= new Evaluation(trains);
+	    voter.buildClassifier(trains);
+		
+		//===============================//
+		
+		
+		trainend = System.currentTimeMillis();
+		
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
+			     
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
+			 
+			  
+				score= voter.distributionForInstance(curr);
+				 
+			 
+				// Find index of the model giving maximum value for the test instance
+			 
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
+			 
+				if (actual == 1) 
+				{
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		   }//for
+
+		
+			testend = System.currentTimeMillis();
+
+			util5_met ut =  new util5_met();
+	 
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+	
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
+	
+			no_of_features[itr] =  trains.numAttributes();
+
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Stacking Vote
+public Evaluation pred2_info_gain_stack( int itr, int p_of_features) 
+{
+
+	// classifier_name = "J48-RF-SVM";	
+	// Feature selection = "info gain";
+	
+	Evaluation evaluation = null;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+		
+		//======================================//
+		//Newly added code:  Feature selection  //
+		
+		 int total_features = trains.numAttributes();
+		 int select_feature_count =  (total_features*p_of_features)/100;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(select_feature_count-1);
+	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
+	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		//======================================//
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		//================================//
+		
+		 Classifier[] cfsArray = new Classifier[3]; 
+		 Classifier classif[] = {new RandomForest(), new J48(), new SMO()};
+		  
+		  cfsArray[0]=classif[0];
+		  cfsArray[1]=classif[1];
+		  cfsArray[2]=classif[2];
+		  
+		  Logistic cfsm =  new Logistic();
+		  
+		  Stacking stack_model= new Stacking();
+		  stack_model.setClassifiers(cfsArray);
+		  stack_model.setMetaClassifier(cfsm);
+		  stack_model.setSeed(1);
+		  
+		  stack_model.buildClassifier(trains);
+	      evaluation= new Evaluation(trains);
+		//===============================//
+		
+		
+		trainend = System.currentTimeMillis();
+		
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
+			     
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
+			 
+			  
+				score= stack_model.distributionForInstance(curr);
+				 
+			 
+				// Find index of the model giving maximum value for the test instance
+			 
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
+			 
+				if (actual == 1) 
+				{
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		   }//for
+
+		
+			testend = System.currentTimeMillis();
+
+			util5_met ut =  new util5_met();
+	 
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+	
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
+	
+			no_of_features[itr] =  trains.numAttributes();
+
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Bagging Vote
+public Evaluation pred2_info_gain_bagging( int itr, int p_of_features, Classifier  classif) 
+{
+
+	// classifier_name = "J48-RF-SVM";	
+	// Feature selection = "info gain";
+	
+	Evaluation evaluation = null;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+		
+		//======================================//
+		//Newly added code:  Feature selection  //
+		
+		 int total_features = trains.numAttributes();
+		 int select_feature_count =  (total_features*p_of_features)/100;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(select_feature_count-1);
+	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
+	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		//======================================//
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		//================================//
+		
+		Bagging bag_model =  new Bagging();	
+		
+	    bag_model.setClassifier(classif);
+	    bag_model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		bag_model.buildClassifier(trains);
+		
+		//===============================//
+		
+		
+		trainend = System.currentTimeMillis();
+		
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
+			     
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
+			 
+			  
+				score= bag_model.distributionForInstance(curr);
+				 
+			 
+				// Find index of the model giving maximum value for the test instance
+			 
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
+			 
+				if (actual == 1) 
+				{
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		   }//for
+
+		
+			testend = System.currentTimeMillis();
+
+			util5_met ut =  new util5_met();
+	 
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+	
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
+	
+			no_of_features[itr] =  trains.numAttributes();
+
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+//Boosting Vote
+public Evaluation pred2_info_gain_boosting( int itr, int p_of_features, Classifier  classif) 
+{
+
+	// classifier_name = "J48-RF-SVM";	
+	// Feature selection = "info gain";
+	
+	Evaluation evaluation = null;
+	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+	
+	try {
+		
+		//======================================//
+		//Newly added code:  Feature selection  //
+		
+		 int total_features = trains.numAttributes();
+		 int select_feature_count =  (total_features*p_of_features)/100;
+		 AttributeSelection attributeSelection = new  AttributeSelection(); 
+	     Ranker ranker = new Ranker(); 
+	     ranker.setNumToSelect(select_feature_count-1);
+	     InfoGainAttributeEval infoGainAttributeEval = new InfoGainAttributeEval(); 
+	     attributeSelection.setEvaluator(infoGainAttributeEval); 
+	     attributeSelection.setSearch(ranker); 
+	     attributeSelection.setInputFormat(trains); 
+	     
+	     trains = Filter.useFilter(trains, attributeSelection); 
+	     
+	     tests= Filter.useFilter(tests, attributeSelection);
+		
+		//======================================//
+	      
+		trainbegin = System.currentTimeMillis();
+		
+		//================================//
+		
+		AdaBoostM1 boost_model =  new AdaBoostM1();	
+	    boost_model.setClassifier(classif);
+	    boost_model.setNumIterations(20);
+		
+	    evaluation= new Evaluation(trains);		
+		boost_model.buildClassifier(trains);
+		
+		//=================================//
+		
+		trainend = System.currentTimeMillis();
+		
+		int thres_itr= 0;
+		for(double thres=0.1; thres<=0.9; thres=thres+0.1)
+		 {
+			double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
+			
+			//evaluation.evaluateModel(model, tests);	
+			testbegin = System.currentTimeMillis();
+			for (int j = 0; j < tests.numInstances(); j++) 
+			 {
+			     
+				double score[] ;
+				Instance curr  =  tests.instance(j);  
+				double actual = curr.classValue();
+			 
+			  
+				score= boost_model.distributionForInstance(curr);
+				 
+			 
+				// Find index of the model giving maximum value for the test instance
+			 
+				double predicted = 0;
+				if ( score[1] <= thres) 
+					{
+						predicted = 0;
+					} else 
+					{
+						predicted = 1;
+					}
+			 
+				if (actual == 1) 
+				{
+			      if (predicted == 1) 
+			      {
+			       tp++;
+			      } else
+			      {
+			       fn++;
+			      }
+			     }
+
+			 else if (actual == 0)
+			   {
+			      if (predicted == 0) 
+			      {
+			       tn++;
+			      } else 
+			      {
+			       fp++;
+			      }
+			     }//else if
+
+			  // System.out.println("tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+		   }//for
+
+		
+			testend = System.currentTimeMillis();
+
+			util5_met ut =  new util5_met();
+	 
+			precision[itr][thres_itr]=ut.compute_precision(tp, fp, tn, fn);
+			double temp = ut.compute_precision(tp, fp, tn, fn);
+		
+			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
+			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
+			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
+			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			 
+	
+			train_time[itr][thres_itr] = trainend -trainbegin;
+			test_time[itr][thres_itr] = testend-testbegin;
+	
+			no_of_features[itr] =  trains.numAttributes();
+
+			//System.out.println("Pre="+ precision[]+"  rec="+ recall+"   fm="+ fmeasure+ "  acc="+ accuracy);
+	
+			thres_itr =  thres_itr + 1;
+	  }// Thresh
+	
+	} catch (Exception e) {
+	
+		e.printStackTrace();
+	}
+
+	return evaluation;
+	
+	//http://www.programcreek.com/2013/01/a-simple-machine-learning-example-in-java/
+}
+
+
+
+
 public Connection initdb(String db_name)
 {
 	Connection conn= null;
@@ -381,7 +1099,7 @@ public Connection initdb(String db_name)
 
 
 // This method computes the average value  and std. deviation and inserts them in a db
-public void compute_avg_stdev_and_insert(String classifier_name, double thres, String feature_sel_tech, int p_of_features, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc , long train_time[], long test_time[]) 
+public void compute_avg_stdev_and_insert(String classifier_name, String ensemble_tech, double thres, String feature_sel_tech, int p_of_features, double[] precision, double[] recall, double[] accuracy, double[] fmeasure, double[] roc_auc , long train_time[], long test_time[]) 
 {
 
 	 // computes following metrics:
@@ -431,7 +1149,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, double thres, S
 		
 	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
 		
-		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"',"+thres+",'"+feature_sel_tech+"',"+p_of_features+"," +trains.numInstances() + ","+ tests.numInstances()+","
+		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"','"+ensemble_tech+"',"+thres+",'"+feature_sel_tech+"',"+p_of_features+"," +trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+avg_features+ ","+ std_features +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
 		                       +","+std_accuracy+","+ avg_roc_auc+","+ std_roc_auc+ ","+avg_train_time+ ","+std_train_time+","+ avg_test_time+","+ std_test_time+ " )";
 		
@@ -487,7 +1205,8 @@ public static void main(String args[])
 	 
 		log_pred_baseline_LOGIM_70_30_info_gain clp = new log_pred_baseline_LOGIM_70_30_info_gain();
 		String classifier_name= "";
-		
+		String ensemble_tech = "";
+		String feature_selection_tech= "";
 			
 			for(int p_of_features=100; p_of_features<=100; p_of_features=p_of_features+10)
 			{
@@ -508,14 +1227,48 @@ public static void main(String args[])
 				   
 				    	clp.pre_process_data();
 				    	
-					
-				    	classifier_name = "rf";
-				    	clp.result = clp.pred2_info_gain_rf(i, p_of_features);				
-				
-				    	
-				    	// classifier_name = "J48-RF-SVM";	
-				    	// Feature selection = "info gain";
-					    // clp.result = clp.pred2_info_gain_maj_vote(models, i);	 	
+				    	 classifier_name = "J48-RF-SVM";
+				    	 ensemble_tech= "Majority Vote";
+					     clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
+				    
+					     classifier_name = "J48-RF-SVM";
+				    	 ensemble_tech= "Average Vote";
+					     clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
+				    
+				    	  classifier_name = "J48-RF-SVM";
+				    	  ensemble_tech= "Max Vote";
+					      clp.result = clp.pred2_info_gain_max_vote(i, p_of_features);	
+				    
+				    	   classifier_name = "J48-RF-SVM";
+				    	   ensemble_tech= "Stacking";
+					       clp.result = clp.pred2_info_gain_stack(i, p_of_features);	
+				   
+					     
+				    	  classifier_name = "J48";
+				    	  ensemble_tech= "Bagging";
+					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
+					      
+					      classifier_name = "RF";
+				    	  ensemble_tech= "Bagging";
+					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
+					     
+					      classifier_name = "SMO";
+				    	  ensemble_tech= "Bagging";
+					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
+					    
+					      classifier_name = "J48";
+				    	  ensemble_tech= "BoosTing";
+					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new J48());	
+					    
+					      classifier_name = "RF";
+				    	  ensemble_tech= "Boosting";
+					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new RandomForest());	
+					     
+					      classifier_name = "SMO";
+				    	  ensemble_tech= "Boosting";
+					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	
+					    
+					    
 						
 					}
 					  
@@ -545,7 +1298,7 @@ public static void main(String args[])
 					  temp_test_time[l]  =  clp.test_time[l][k];
 					  
 					}// for
-			      clp.compute_avg_stdev_and_insert(classifier_name, temp_thres, "info-gain",  p_of_features, temp_precision, temp_recall, temp_accuracy, temp_fmeasure , temp_roc_auc, temp_train_time,temp_test_time );
+			      clp.compute_avg_stdev_and_insert(classifier_name, ensemble_tech, temp_thres, feature_selection_tech,  p_of_features, temp_precision, temp_recall, temp_accuracy, temp_fmeasure , temp_roc_auc, temp_train_time,temp_test_time );
 			   
 			      temp_thres  =  temp_thres +0.1;
 			      

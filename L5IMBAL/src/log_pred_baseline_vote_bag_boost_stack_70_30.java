@@ -1450,7 +1450,7 @@ public static void main(String args[])
 				    	clp.pre_process_data();
 				    	
 				    	
-					// Note:  Select only one of the voting technique from following three
+					// Note:  Select only one of the ensemble technique from following three
 				    	
 				    // classifier_name = "J48-RF-SVM";	
 				    // clp.result = clp.pred2_maj_vote(models, thres,i);	
