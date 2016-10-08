@@ -1225,46 +1225,48 @@ public static void main(String args[])
 				   
 				    	clp.pre_process_data();
 				    	
-				    	 classifier_name = "J48-RF-SVM";
-				    	 ensemble_tech= "Majority Vote";
-					     clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
+				    	 //classifier_name = "J48-RF-SVM";
+				    	 //ensemble_tech= "Majority Vote";
+					     //clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
 				    
-					     classifier_name = "J48-RF-SVM";
-				    	 ensemble_tech= "Average Vote";
-					     clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
+					     //classifier_name = "J48-RF-SVM";
+				    	 //ensemble_tech= "Average Vote";
+					     //clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
 				    
-				    	  classifier_name = "J48-RF-SVM";
-				    	  ensemble_tech= "Max Vote";
-					      clp.result = clp.pred2_info_gain_max_vote(i, p_of_features);	
+				    	  //classifier_name = "J48-RF-SVM";
+				    	  //ensemble_tech= "Max Vote";
+					      //clp.result = clp.pred2_info_gain_max_vote(i, p_of_features);	
 				    
-				    	   classifier_name = "J48-RF-SVM";
-				    	   ensemble_tech= "Stacking";
-					       clp.result = clp.pred2_info_gain_stack(i, p_of_features);	
+				    	  // classifier_name = "J48-RF-SVM";
+				    	   //ensemble_tech= "Stacking";
+					     //  clp.result = clp.pred2_info_gain_stack(i, p_of_features);	
 				   
 					     
-				    	  classifier_name = "J48";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
+				    	  //classifier_name = "J48";
+				    	  //ensemble_tech= "Bagging";
+					      //clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
 					      
-					      classifier_name = "RF";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
+					      //classifier_name = "RF";
+				    	  //ensemble_tech= "Bagging";
+					      //clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
 					     
-					      classifier_name = "SMO";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
+					    //  classifier_name = "SMO";
+				    	 // ensemble_tech= "Bagging";
+					     // clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
 					    
-					      classifier_name = "J48";
-				    	  ensemble_tech= "BoosTing";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new J48());	
+					      //classifier_name = "J48";
+				    	  //ensemble_tech= "BoosTing";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new J48());	
 					    
-					      classifier_name = "RF";
-				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new RandomForest());	
+					      //classifier_name = "RF";
+				    	  //ensemble_tech= "Boosting";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new RandomForest());	
 					     
-					      classifier_name = "SMO";
-				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	 
+					      //classifier_name = "SMO";
+				    	  //ensemble_tech= "Boosting";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	
+					      
+					      System.out.println("Project="+ clp.source_project+ " Classifier name:"+ classifier_name+"  ensem tech:"+ ensemble_tech+" itr="+ clp.iterations);
 						
 					}
 					  

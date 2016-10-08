@@ -6,9 +6,9 @@ from pylab import *
 import numpy as np
 from matplotlib.font_manager import FontProperties
 
-"""==================================================================================================================
-@ uses: This file is shows the average improvement achived by applying ensemble based techniques for logging prediction
-======================================================================================================================"""
+"""==============================================================================================================================================
+@ uses: This file is shows the average improvement achived by applying Logim model (ensemble based techniques + threshold) for logging prediction
+================================================================================================================================================="""
 
 
 #"""
@@ -20,15 +20,14 @@ path = "E:\\Sangeeta\\Research\\L5IMBAL\\result\\"
 
 
 
-#========================RQ1 =============================================#
-# Comparsion of classifier on balanced and imbalanced dataset  (catch-BLOCKS)
+#========================RQ5 =============================================#
+# Comparision of classifier on balanced and imbalanced dataset  (catch-BLOCKS)
 #==========================================================================#
-#               LF  (j48)                                                      #     
-#=========================================================================#
+#               LF  (j48)                                                  #     
+#==========================================================================#
 plt.close()
 
-ensemble_impr_in_j48=(4.46, 4.41, 0.96, 5.42, 3.71, 1.48, 3.08, 6.39, 4.84, 0.71)
-
+logim_impr_in_j48=(5.99, 4.80, 5.09, 6.98, 5.69, 7.38, 4.07, 6.85, 5.45, 1.30)
 
 ind = np.arange(10)
 width = 0.3
@@ -43,25 +42,25 @@ ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in J48 (Catch-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
 fontP.set_size('small')
-rects1 = ax.bar(ind, ensemble_impr_in_j48, width,color ='#bebebe')
+rects1 = ax.bar(ind, logim_impr_in_j48, width,color ='#bebebe')
 
 
 plt.tight_layout()
 #plt.show()
 
-plt.savefig(path+"rq4-imp-j48-lf-catch.pdf")
+plt.savefig(path+"rq5-logim-imp-j48-lf-catch.pdf")
 
 
 #==========================================================================#
 #               LF  (RF)                                                      #     
 #=========================================================================#
 plt.close()
-ensemble_impr_in_rf=(6.32, 6.27, 2.82, 7.28, 5.57, 3.34, 4.94, 8.25, 6.70, 2.57)
+logim_impr_in_rf=(7.86, 6.67, 6.96, 8.85, 7.56, 9.24, 5.93, 8.72, 7.32, 3.17)
 
 ind = np.arange(10)
 width = 0.3
@@ -70,24 +69,24 @@ fig, ax = plt.subplots()
 
 
 # add some text for labels, title and axes ticks
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 13})
 ylim(0,20)
 ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in RF (Catch-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
 fontP.set_size('small')
-rects1 = ax.bar(ind, ensemble_impr_in_rf, width,color ='#bebebe')
+rects1 = ax.bar(ind, logim_impr_in_rf, width,color ='#bebebe')
 
 
 plt.tight_layout()
 #plt.show()
 
-plt.savefig(path+"rq4-imp-rf-lf-catch.pdf")
+plt.savefig(path+"rq5-logim-imp-rf-lf-catch.pdf")
 
 
 #==========================================================================#
@@ -95,7 +94,7 @@ plt.savefig(path+"rq4-imp-rf-lf-catch.pdf")
 #=========================================================================#
 plt.close()
 
-ensemble_impr_in_svm=(1.64, 1.59, -1.86, 2.60, 0.89, -1.34, 0.26, 3.57, 2.02, -2.11)
+ensemble_impr_in_svm=(3.17, 1.98, 2.27, 4.16, 2.87, 4.56, 1.25, 4.03, 2.63, -1.52)
 
 ind = np.arange(10)
 width = 0.3
@@ -104,13 +103,13 @@ fig, ax = plt.subplots()
 
 
 # add some text for labels, title and axes ticks
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 13})
 ylim(-5,20)
 ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Techniques")
 ax.set_title('Improvement in SVM (Catch-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
@@ -120,7 +119,7 @@ ax.plot([0., 9], [0, 0], "k-")
 
 plt.tight_layout()
 #plt.show()
-plt.savefig(path+"rq4-imp-svm-lf-catch.pdf")
+plt.savefig(path+"rq5-logim-imp-svm-lf-catch.pdf")
 
 
 
@@ -134,7 +133,7 @@ plt.savefig(path+"rq4-imp-svm-lf-catch.pdf")
 #=========================================================================#
 plt.close()
 
-ensemble_impr_in_j48_if=(-2.46, -1.22, -8.19, 2.98, 1.31, -4.44, -5.36, 9.94, 7.33, -4.77)
+logim_impr_in_j48_if=()
 
 ind = np.arange(10)
 width = 0.3
@@ -143,31 +142,31 @@ fig, ax = plt.subplots()
 
 
 # add some text for labels, title and axes ticks
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 13})
 ylim(0,20)
 ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in J48 (If-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
 fontP.set_size('small')
-rects1 = ax.bar(ind, ensemble_impr_in_j48_if, width,color ='#bebebe')
+rects1 = ax.bar(ind, logim_impr_in_j48_if, width,color ='#bebebe')
 
 
 plt.tight_layout()
 #plt.show()
 
-plt.savefig(path+"rq4-imp-j48-lf-if.pdf")
+plt.savefig(path+"rq4-logim-imp-j48-lf-if.pdf")
 
 
 #==========================================================================#
 #               LF  (RF)                                                      #     
 #=========================================================================#
 plt.close()
-ensemble_impr_in_rf_if=(0.38, 1.62, -5.35, 5.82, 4.15, -1.60, -2.52, 12.78, 10.17, -1.93)
+logim_impr_in_rf_if=()
 
 ind = np.arange(10)
 width = 0.3
@@ -176,24 +175,24 @@ fig, ax = plt.subplots()
 
 
 # add some text for labels, title and axes ticks
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 13})
 ylim(0,20)
 ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in RF (If-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
 fontP.set_size('small')
-rects1 = ax.bar(ind, ensemble_impr_in_rf_if, width,color ='#bebebe')
+rects1 = ax.bar(ind, logim_impr_in_rf_if, width,color ='#bebebe')
 
 
 plt.tight_layout()
 #plt.show()
 
-plt.savefig(path+"rq4-imp-rf-lf-if.pdf")
+plt.savefig(path+"rq5-logim-imp-rf-lf-if.pdf")
 
 
 #==========================================================================#
@@ -201,7 +200,7 @@ plt.savefig(path+"rq4-imp-rf-lf-if.pdf")
 #=========================================================================#
 plt.close()
 
-ensemble_impr_in_svm_if=(4.56, 5.80, -1.17, 10.00, 8.33, 2.58, 1.66, 16.96, 14.35, 2.25)
+ensemble_impr_in_svm_if=()
 
 ind = np.arange(10)
 width = 0.3
@@ -210,23 +209,23 @@ fig, ax = plt.subplots()
 
 
 # add some text for labels, title and axes ticks
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 13})
 ylim(-5,20)
 ax.set_ylabel('Average LF (%)')
 ax.set_xlabel("Ensemble Techniques")
 ax.set_title('Improvement in SVM (If-Blocks)')
 ax.set_xticks(ind+width)
-ax.set_xticklabels(('AV', 'MV', 'MxV','ST', 'BA(J48)', 'BA(RF)', 'BA(SVM)','BO(J48)', 'BO(RF)', 'BO(SVM)'), rotation = 300)
+ax.set_xticklabels(('LogIm-AV', 'LogIm-MV', 'LogIm-MxV','LogIm-ST', 'LogIm-BA(J48)', 'LogIm-BA(RF)', 'LogIm-BA(SVM)','LogIm-BO(J48)', 'LogIm-BO(RF)', 'LogIm-BO(SVM)'), rotation = 300)
 
 #==== Command to change font size of legend ===#
 fontP = FontProperties()
 fontP.set_size('small')
-rects1 = ax.bar(ind, ensemble_impr_in_svm_if, width,color ='#bebebe')
-ax.plot([0., 9], [0, 0], "k-")
+rects1 = ax.bar(ind, logim_impr_in_svm_if, width,color ='#bebebe')
+#ax.plot([0., 9], [0, 0], "k-")
 
 plt.tight_layout()
 #plt.show()
-plt.savefig(path+"rq4-imp-svm-lf-if.pdf")
+plt.savefig(path+"rq5-logim-imp-svm-lf-if.pdf")
 
 
 
