@@ -56,7 +56,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 
 
  * */
-public class log_pred_baseline_LOGIM_70_30_info_gain
+public class delete_CopyOflog_pred_baseline_LOGIM_TEST_70_30
 {
 
 	/*
@@ -77,7 +77,7 @@ public class log_pred_baseline_LOGIM_70_30_info_gain
 	//*/
 	 
 
-	int iterations=10;	
+	int iterations=2;	
 	String type = "catch";
 	//String type ="if";
 
@@ -247,7 +247,7 @@ public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features)
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		/* int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -258,7 +258,7 @@ public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features)
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -375,8 +375,6 @@ public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features)
 public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features) 
 {
 
-	// classifier_name = "J48-RF-SVM";	
-	// Feature selection = "info gain";
 	
 	Evaluation evaluation = null;
 	//double tp=0.0, fp=0.0, tn =0.0,fn=0.0;
@@ -387,7 +385,7 @@ public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features)
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		 /*int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -398,7 +396,7 @@ public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features)
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -486,7 +484,7 @@ public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features)
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
 			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
 			
-			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
+			System.out.println("ITR="+itr+"  precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
 			train_time[itr][thres_itr] = trainend -trainbegin;
@@ -526,7 +524,7 @@ public Evaluation pred2_info_gain_max_vote( int itr, int p_of_features)
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		 /*int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -537,7 +535,7 @@ public Evaluation pred2_info_gain_max_vote( int itr, int p_of_features)
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -665,7 +663,7 @@ public Evaluation pred2_info_gain_stack( int itr, int p_of_features)
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		 /*int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -676,7 +674,7 @@ public Evaluation pred2_info_gain_stack( int itr, int p_of_features)
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -813,7 +811,7 @@ public Evaluation pred2_info_gain_bagging( int itr, int p_of_features, Classifie
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		/* int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -824,7 +822,7 @@ public Evaluation pred2_info_gain_bagging( int itr, int p_of_features, Classifie
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -953,7 +951,7 @@ public Evaluation pred2_info_gain_boosting( int itr, int p_of_features, Classifi
 		//Newly added code:  Feature selection  //
 		
 		 int total_features = trains.numAttributes();
-		 int select_feature_count =  (total_features*p_of_features)/100;
+		 /*int select_feature_count =  (total_features*p_of_features)/100;
 		 AttributeSelection attributeSelection = new  AttributeSelection(); 
 	     Ranker ranker = new Ranker(); 
 	     ranker.setNumToSelect(select_feature_count-1);
@@ -964,7 +962,7 @@ public Evaluation pred2_info_gain_boosting( int itr, int p_of_features, Classifi
 	     
 	     trains = Filter.useFilter(trains, attributeSelection); 
 	     
-	     tests= Filter.useFilter(tests, attributeSelection);
+	     tests= Filter.useFilter(tests, attributeSelection);*/
 		
 		//======================================//
 	      
@@ -1147,7 +1145,7 @@ public void compute_avg_stdev_and_insert(String classifier_name, String ensemble
 		double avg_features = ut.compute_mean(no_of_features);
 		double std_features = ut.compute_stddev(no_of_features);
 		
-	   // System.out.println("model ="+classifier_name +"   Acc = "+ avg_accuracy + "  size="+ pred_10_db.size());
+	    System.out.println("This is avg precisin ="+ avg_precision);
 		
 		String insert_str =  " insert into "+ result_table +"  values("+ "'"+ source_project+"','"+ "same_as_source" +"','"+ classifier_name+"','"+ensemble_tech+"',"+thres+",'"+feature_sel_tech+"',"+p_of_features+"," +trains.numInstances() + ","+ tests.numInstances()+","
 		                       + iterations+","+avg_features+ ","+ std_features +","+avg_precision+","+ std_precision+","+ avg_recall+","+ std_recall+","+avg_fmeasure+","+std_fmeasure+","+ avg_accuracy 
@@ -1203,12 +1201,12 @@ public static void main(String args[])
 	{
 	
 	 
-		log_pred_baseline_LOGIM_70_30_info_gain clp = new log_pred_baseline_LOGIM_70_30_info_gain();
+		delete_CopyOflog_pred_baseline_LOGIM_TEST_70_30 clp = new delete_CopyOflog_pred_baseline_LOGIM_TEST_70_30();
 		String classifier_name= "";
 		String ensemble_tech = "";
-		String feature_selection_tech= "info-gain";
+		String feature_selection_tech= "no-feature-selection";
 			
-			for(int p_of_features=10; p_of_features<=100; p_of_features=p_of_features+10)
+			for(int p_of_features=100; p_of_features>=100; p_of_features=p_of_features-10)
 			{
 				clp.precision   = new double[clp.iterations][9];
 				clp.recall      = new double[clp.iterations][9];
@@ -1227,57 +1225,68 @@ public static void main(String args[])
 				   
 				    	clp.pre_process_data();
 				    	
-				    	 classifier_name = "J48-RF-SVM";
-				    	 ensemble_tech= "Majority Vote";
-					     clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
+				    	 //classifier_name = "J48-RF-SVM";
+				    	 //ensemble_tech= "Majority Vote";
+					     //clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
 				    
-					     classifier_name = "J48-RF-SVM";
-				    	 ensemble_tech= "Average Vote";
-					     clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
+					    // classifier_name = "J48-RF-SVM";
+				    	// ensemble_tech= "Average Vote";
+					    // clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
 				    
-				    	  classifier_name = "J48-RF-SVM";
-				    	  ensemble_tech= "Max Vote";
-					      clp.result = clp.pred2_info_gain_max_vote(i, p_of_features);	
+				    	  //classifier_name = "J48-RF-SVM";
+				    	  //ensemble_tech= "Max Vote";
+					      //clp.result = clp.pred2_info_gain_max_vote(i, p_of_features);	
 				    
-				    	   classifier_name = "J48-RF-SVM";
-				    	   ensemble_tech= "Stacking";
-					       clp.result = clp.pred2_info_gain_stack(i, p_of_features);	
+				    	  // classifier_name = "J48-RF-SVM";
+				    	   //ensemble_tech= "Stacking";
+					     //  clp.result = clp.pred2_info_gain_stack(i, p_of_features);	
 				   
 					     
-				    	  classifier_name = "J48";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
+				    	  //classifier_name = "J48";
+				    	  //ensemble_tech= "Bagging";
+					      //clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
 					      
-					      classifier_name = "RF";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
-					     
-					      classifier_name = "SMO";
-				    	  ensemble_tech= "Bagging";
-					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
+					     // classifier_name = "RF";
+				    	//  ensemble_tech= "Bagging";
+					     // clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
+					   
+				    	
+					    //  classifier_name = "SMO";
+				    	 // ensemble_tech= "Bagging";
+					     // clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
 					    
-					      classifier_name = "J48";
-				    	  ensemble_tech= "BoosTing";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new J48());	
+					      //classifier_name = "J48";
+				    	  //ensemble_tech= "BoosTing";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new J48());	
 					    
-					      classifier_name = "RF";
-				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new RandomForest());	
+					      //classifier_name = "RF";
+				    	  //ensemble_tech= "Boosting";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new RandomForest());	
 					     
-					      classifier_name = "SMO";
-				    	  ensemble_tech= "Boosting";
-					      clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	 
+					      //classifier_name = "SMO";
+				    	  //ensemble_tech= "Boosting";
+					      //clp.result = clp.pred2_info_gain_boosting(i, p_of_features, new SMO());	
+					      
+					      System.out.println("Project="+ clp.source_project+ " Classifier name:"+ classifier_name+"  ensem tech:"+ ensemble_tech+" itr="+ clp.iterations);
 						
 					}
 					  
 				
 				// define some temporary parameters
 				double temp_thres= 0.1;
-				double temp_precision[] =  new double[10];
+				
+				/*double temp_precision[] =  new double[10];
 				double temp_recall[]    =  new double[10];
 				double temp_fmeasure[] 	=  new double[10];
 				double temp_accuracy[]	=  new double[10];
-				double temp_roc_auc[] 	=  new double[10];
+				double temp_roc_auc[] 	=  new double[10];*/
+				
+				double temp_precision[] =  new double[clp.iterations];
+				double temp_recall[]    =  new double[clp.iterations];
+				double temp_fmeasure[] 	=  new double[clp.iterations];
+				double temp_accuracy[]	=  new double[clp.iterations];
+				double temp_roc_auc[] 	=  new double[clp.iterations];
+				
 				
 				long temp_train_time[] =  new long[10];
 				long temp_test_time[]  = new long[10];
@@ -1295,6 +1304,7 @@ public static void main(String args[])
 					  temp_train_time[l] = clp.train_time[l][k];
 					  temp_test_time[l]  =  clp.test_time[l][k];
 					  
+					  System.out.println("This is temp  precision="+ temp_precision[l]);
 					}// for
 			      clp.compute_avg_stdev_and_insert(classifier_name, ensemble_tech, temp_thres, feature_selection_tech,  p_of_features, temp_precision, temp_recall, temp_accuracy, temp_fmeasure , temp_roc_auc, temp_train_time,temp_test_time );
 			   

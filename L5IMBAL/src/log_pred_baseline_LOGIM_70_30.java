@@ -1230,8 +1230,8 @@ public static void main(String args[])
 					     //clp.result = clp.pred2_info_gain_maj_vote(i, p_of_features);	
 				    
 					     //classifier_name = "J48-RF-SVM";
-				    	 //ensemble_tech= "Average Vote";
-					     //clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
+				    	//ensemble_tech= "Average Vote";
+					    //clp.result = clp.pred2_info_gain_avg_vote(i, p_of_features);	
 				    
 				    	  //classifier_name = "J48-RF-SVM";
 				    	  //ensemble_tech= "Max Vote";
@@ -1246,10 +1246,11 @@ public static void main(String args[])
 				    	  //ensemble_tech= "Bagging";
 					      //clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new J48());	
 					      
-					      //classifier_name = "RF";
-				    	  //ensemble_tech= "Bagging";
-					      //clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
-					     
+					      classifier_name = "RF";
+				    	  ensemble_tech= "Bagging";
+					      clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new RandomForest());	
+					   
+				    	
 					    //  classifier_name = "SMO";
 				    	 // ensemble_tech= "Bagging";
 					     // clp.result = clp.pred2_info_gain_bagging(i, p_of_features, new SMO());	
@@ -1273,11 +1274,11 @@ public static void main(String args[])
 				
 				// define some temporary parameters
 				double temp_thres= 0.1;
-				double temp_precision[] =  new double[10];
-				double temp_recall[]    =  new double[10];
-				double temp_fmeasure[] 	=  new double[10];
-				double temp_accuracy[]	=  new double[10];
-				double temp_roc_auc[] 	=  new double[10];
+				double temp_precision[] =  new double[clp.iterations];
+				double temp_recall[]    =  new double[clp.iterations];
+				double temp_fmeasure[] 	=  new double[clp.iterations];
+				double temp_accuracy[]	=  new double[clp.iterations];
+				double temp_roc_auc[] 	=  new double[clp.iterations];
 				
 				long temp_train_time[] =  new long[10];
 				long temp_test_time[]  = new long[10];
