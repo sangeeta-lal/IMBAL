@@ -151,7 +151,7 @@ ax9.set_ylim(0,100)
 ax9.set_xlim(0.1, 0.9)
 ax9.set_title("(i)LBOR")
 ax9.set_ylabel("LF (%)")
-ax9.set_xlabel("Threshold")
+ax9.set_xlabel("Threshold") 
 
 lbos_tom = [46.17, 46.98, 47.27 ,46.88, 46.39, 45.6, 44.62, 43.12, 40.67]
 lbos_cloud = [53.45, 56.42, 57.65, 57.63, 56.56, 55.02, 52.61, 49.3, 42]
