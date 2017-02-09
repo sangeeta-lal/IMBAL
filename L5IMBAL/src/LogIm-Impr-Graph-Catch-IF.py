@@ -40,7 +40,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 15})
 ylim(0,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in J48 (Catch-Blocks)')
 ax.set_xticks(ind+width)
@@ -73,7 +73,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 13})
 ylim(0,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in RF (Catch-Blocks)')
 ax.set_xticks(ind+width)
@@ -107,7 +107,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 13})
 ylim(-5,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Techniques")
 ax.set_title('Improvement in SVM (Catch-Blocks)')
 ax.set_xticks(ind+width)
@@ -133,7 +133,8 @@ plt.savefig(path+"logim-imp-svm-lf-catch.pdf")
 #=========================================================================#
 plt.close()
 
-logim_impr_in_j48_if=(7.85, 0.11, 7.62, 9.94, 7.54, 12.11, 1.47, 10.38, 8.22, -2.40)
+
+logim_impr_in_j48_if=(7.85,0.11,7.62,10.06,7.54, 12.11, 1.28,10.78,8.22,-2.18)
 
 
 ind = np.arange(10)
@@ -145,7 +146,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 13})
 ylim(-5,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in J48 (If-Blocks)')
 ax.set_xticks(ind+width)
@@ -168,8 +169,8 @@ plt.savefig(path+"logim-imp-j48-lf-if.pdf")
 #=========================================================================#
 plt.close()
 
-logim_impr_in_rf_if=(10.69, 2.95, 10.46, 12.78, 10.38, 14.95, 4.31, 13.22, 11.06,0.44)
 
+logim_impr_in_rf_if=(10.69,2.95, 10.46, 12.9, 10.38, 14.95, 4.12, 13.62, 11.06, 0.66)
 
 ind = np.arange(10)
 width = 0.3
@@ -180,7 +181,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 13})
 ylim(0,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Technique")
 ax.set_title('Improvement in RF (If-Blocks)')
 ax.set_xticks(ind+width)
@@ -203,7 +204,8 @@ plt.savefig(path+"logim-imp-rf-lf-if.pdf")
 #=========================================================================#
 plt.close()
 
-logim_impr_in_svm_if=(14.87, 7.13, 14.64, 16.96, 14.56, 19.13, 8.49, 17.4, 15.24, 4.62)
+
+logim_impr_in_svm_if=(14.87,7.13, 14.64, 17.08, 14.56,19.13, 8.3, 17.8,15.24, 4.84)
 
 ind = np.arange(10)
 width = 0.3
@@ -214,7 +216,7 @@ fig, ax = plt.subplots()
 # add some text for labels, title and axes ticks
 plt.rcParams.update({'font.size': 13})
 ylim(0,20)
-ax.set_ylabel('Average LF (%)')
+ax.set_ylabel('Improvement in LF (%)')
 ax.set_xlabel("Ensemble Techniques")
 ax.set_title('Improvement in SVM (If-Blocks)')
 ax.set_xticks(ind+width)

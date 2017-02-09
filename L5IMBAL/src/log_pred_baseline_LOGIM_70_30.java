@@ -344,7 +344,7 @@ public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			roc_auc[itr][thres_itr] = 0.0;// call some method here if possible	
 			
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 

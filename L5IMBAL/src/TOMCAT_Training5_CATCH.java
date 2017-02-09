@@ -117,7 +117,7 @@ public class TOMCAT_Training5_CATCH
 	
 	ArrayList<String> all_file_list= new ArrayList<String>();
 	String log_levels_combined = "";
-	///*
+	/*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging5_imbal";
@@ -145,6 +145,36 @@ public class TOMCAT_Training5_CATCH
 	  String table = "tomcat_catch_training5";
    //*/
 	 
+	
+	///*
+	 String url = "jdbc:mysql://localhost:3306/";
+	 String driver = "com.mysql.jdbc.Driver";
+	 String db_name ="logging5_imbal_rc_feb9";
+	 String userName = "root"; 
+	 String password = "1234";
+	   
+	//@Note: create this file using create_file_listing.py
+	 String listing_file_path = "F:\\Research\\L5IMBAL\\result\\tomcat-8.0.9_java_files.txt";
+	 String non_logged_file_path = "F:\\Research\\L5IMBAL\\result\\tomcat_non_log_catch.txt";
+	 String logged_file_path = "F:\\Research\\L5IMBAL\\result\\tomcat_log_catch.txt";
+	 String table = "tomcat_catch_training5";
+	//*/
+   
+	/*
+	 String url = "jdbc:mysql://localhost:3307/";
+	 String driver = "com.mysql.jdbc.Driver";
+	 String db_name ="logging5_imbal_rc_feb9";
+	 String userName = "root"; 
+	 String password = "1234";
+	
+	//@Note: create this file using create_file_listing.py
+	 String listing_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\tomcat-8.0.9_java_files.txt";  
+	 String non_logged_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\tomcat_non_log_catch.txt";
+	 String logged_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\tomcat_log_catch.txt";
+	  String table = "tomcat_catch_training5";
+  //*/
+	
+	
 	 Connection conn=null;	
      java.sql.Statement stmt = null;
 			

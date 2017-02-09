@@ -107,7 +107,7 @@ public class Hadoop_Training5_IF
 	ArrayList<String> all_file_list= new ArrayList<String>();
 	String log_levels_combined = "";
 		
-	///*
+	/*
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
 	String db_name ="logging5_imbal";
@@ -137,6 +137,38 @@ public class Hadoop_Training5_IF
 	
    //*/
 	 
+	
+	///*
+	String url = "jdbc:mysql://localhost:3306/";
+	String driver = "com.mysql.jdbc.Driver";
+	String db_name ="logging5_imbal_rc_feb9";
+	String userName = "root"; 
+	String password = "1234";
+	String table ="hd_if_training5";	
+    String listing_file_path = "F:\\Research\\L5IMBAL\\result\\hd_java_files.txt";
+    
+    String non_logged_file_path = "F:\\Research\\L5IMBAL\\result\\hd_non_log_if.txt";
+	String logged_file_path = "F:\\Research\\L5IMBAL\\result\\hd_log_if.txt";
+	
+	
+	//*/
+    //@Note: create this file using create_file_listing.py
+	/*
+	String folder_path = "";
+	String url = "jdbc:mysql://localhost:3307/";
+	String driver = "com.mysql.jdbc.Driver";
+	String db_name ="logging5_imbal_rc_feb9";
+	String userName = "root"; 
+	String password = "1234";
+	String table ="hd_if_training5";
+    String listing_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\hd_java_files.txt"; 
+    
+    String non_logged_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\hd_non_log_if.txt";
+	String logged_file_path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\hd_log_if.txt";
+	
+   //*/
+	
+	
     Connection conn=null;	
 	java.sql.Statement stmt = null;
 		
