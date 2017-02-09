@@ -4,7 +4,7 @@
 """
 import os
 
-#"""
+"""
 
 #rootdir = "F:\\Research\\L5IMBAL\\dataset\\tomcat-8.0.9"
 #rootdir = "F:\\Research\\L5IMBAL\\dataset\\cloudstack-4.3.0"
@@ -12,11 +12,21 @@ rootdir = "F:\\Research\\L5IMBAL\\dataset\\hd"
 path = "F:\\Research\\L5IMBAL\\result\\"
 
 """
+"""
 ##Server 
 rootdir = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\tomcat-8.0.9"
 #rootdir = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\cloudstack-4.3.0"
 rootdir = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\hd"
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\result\\"
+
+#"""
+
+"""
+##JIIT Server 
+rootdir = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\tomcat-8.0.9"
+#rootdir = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\cloudstack-4.3.0"
+rootdir = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\hd"
+path = "D:\\Sangeeta\\Research\\L5IMBAL\\result\\"
 
 #"""
 
