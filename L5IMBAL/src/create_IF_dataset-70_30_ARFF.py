@@ -30,7 +30,7 @@ project =  "hd"
 title = 'Hadoop'
 #"""
 
-#"""
+"""
 port=3306
 user="root"
 password="1234"
@@ -42,7 +42,7 @@ test_file_path = path+ project+"-arff\\if\\"
 
 """
 
-
+"""
 port=3307
 user="sangeetal"
 password="sangeetal"
@@ -52,6 +52,19 @@ path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
 train_file_path=path+project+"-arff\\if\\"
 test_file_path = path+ project+"-arff\\if\\"
 #"""
+
+# JIIT Server
+"""
+port=3306
+user="root"
+password="1234"
+database="logging5_imbal_rc_feb9"
+main_source_table = project+"_if_training5"  # from this table we have to take the data
+path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
+train_file_path=path+project+"-arff\\if\\"
+test_file_path = path+ project+"-arff\\if\\"
+#"""
+
 
 db1= MySQLdb.connect(host="localhost",user=user, passwd=password, db=database, port=port)
 select_cursor = db1.cursor()

@@ -55,6 +55,17 @@ train_file_path=path+project+"-arff\\catch\\"
 test_file_path = path+ project+"-arff\\catch\\"
 #"""
 
+# JIIT Server
+"""
+port=3306
+user="root"
+password="1234"
+database="logging5_imbal_rc_feb9"
+main_source_table = project+"_catch_training5"  # from this table we have to take the data
+path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
+train_file_path=path+project+"-arff\\catch\\"
+test_file_path = path+ project+"-arff\\catch\\"
+#"""
 
 
 ##  feb9 ###
