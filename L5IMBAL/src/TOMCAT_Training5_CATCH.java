@@ -161,7 +161,7 @@ public class TOMCAT_Training5_CATCH
 	//*/
    
 	/*
-	 String url = "jdbc:mysql://localhost:3307/";
+	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging5_imbal_rc_feb9";
 	 String userName = "root"; 

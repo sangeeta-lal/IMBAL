@@ -30,7 +30,7 @@ project =  "hd"
 title = 'Hadoop'
 #"""
 
-#"""
+"""
 port=3306
 user="root"
 password="1234"
@@ -44,13 +44,40 @@ test_file_path = path+ project+"-arff\\catch\\"
 #non_logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\non_logged_indices.txt"
 """
 
-
+"""
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging5_imbal"
 main_source_table = project+"_catch_training5"  # from this table we have to take the data
 path = "E:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
+train_file_path=path+project+"-arff\\catch\\"
+test_file_path = path+ project+"-arff\\catch\\"
+#"""
+
+
+
+##  feb9 ###
+"""
+port=3306
+user="root"
+password="1234"
+database="logging5_imbal_rc_feb9"
+main_source_table = project+"_catch_training5"  # from this table we have to take the data
+path = "F:\\Research\\L5IMBAL\\dataset\\"
+train_file_path=path+project+"-arff\\catch\\"
+test_file_path = path+ project+"-arff\\catch\\"
+
+#logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\logged_indices.txt"
+#non_logged_indices_file_path =  path+project+"-arff\\catch\\train_1\\non_logged_indices.txt"
+
+"""
+port=3306
+user="root"
+password="1234"
+database="logging5_imbal_rc_feb9"
+main_source_table = project+"_catch_training5"  # from this table we have to take the data
+path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\"
 train_file_path=path+project+"-arff\\catch\\"
 test_file_path = path+ project+"-arff\\catch\\"
 #"""

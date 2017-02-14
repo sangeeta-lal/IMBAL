@@ -56,7 +56,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  * 
 
  * */
-public class log_pred_baseline_LOGIM_70_30
+public class log_pred_baseline_LOGIM_70_30_NEW_rc_feb9_roc
 {
 
 	/*
@@ -68,7 +68,7 @@ public class log_pred_baseline_LOGIM_70_30
 	  
 	// */
 	
-	///*
+	/*
 	String path = "F:\\Research\\L5IMBAL\\dataset\\";
 	String user_name =  "root";
 	String password = "1234";
@@ -77,6 +77,13 @@ public class log_pred_baseline_LOGIM_70_30
 	//*/
 	 
 
+	///*
+	String path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
+	String user_name =  "root";
+	String password = "1234";
+	String url = "jdbc:mysql://localhost:3306/";
+	String driver = "com.mysql.jdbc.Driver";
+	//*/
 	int iterations=10;	
 	String type = "catch";
 	//String type ="if";
@@ -86,7 +93,9 @@ public class log_pred_baseline_LOGIM_70_30
 	//String source_project="hd";
 	
 	
-	String db_name ="logging5_imbal";
+	//String db_name ="logging5_imbal";
+	
+	String  db_name = "logging5_imbal_rc_feb9";
 	String result_table = "result_baseline_logim_"+type;
 	//String result_table = "temp_threshold";
 
@@ -344,8 +353,14 @@ public Evaluation pred2_info_gain_maj_vote( int itr, int p_of_features)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] = 0.0;// call some method here if possible	
+			// rc feb 9 start
 			
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+						
+				evaluation.evaluateModel(voter, tests);
+				roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
+						
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
@@ -482,8 +497,16 @@ public Evaluation pred2_info_gain_avg_vote( int itr, int p_of_features)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
 			
+			// rc feb 9 start
+			
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+							
+			 evaluation.evaluateModel(voter, tests);
+			roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
+									
+						
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
@@ -621,8 +644,14 @@ public Evaluation pred2_info_gain_max_vote( int itr, int p_of_features)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			// rc feb 9 start
 			
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+										
+			 evaluation.evaluateModel(voter, tests);
+			roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
+						
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
@@ -769,8 +798,14 @@ public Evaluation pred2_info_gain_stack( int itr, int p_of_features)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
 			
+			// rc feb 9 start
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+							
+			 evaluation.evaluateModel(stack_model, tests);
+			roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
+						
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
@@ -909,8 +944,14 @@ public Evaluation pred2_info_gain_bagging( int itr, int p_of_features, Classifie
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			// rc feb 9 start
 			
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+							
+				 evaluation.evaluateModel(bag_model, tests);
+				roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
+						
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
 	
@@ -1047,7 +1088,14 @@ public Evaluation pred2_info_gain_boosting( int itr, int p_of_features, Classifi
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			// rc feb 9 start
+			
+			// @old code roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			evaluation.evaluateModel(boost_model, tests);
+			roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;
+			// rc feb 9 end
 			
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
@@ -1201,7 +1249,7 @@ public static void main(String args[])
 	{
 	
 	 
-		log_pred_baseline_LOGIM_70_30 clp = new log_pred_baseline_LOGIM_70_30();
+		log_pred_baseline_LOGIM_70_30_NEW_rc_feb9_roc clp = new log_pred_baseline_LOGIM_70_30_NEW_rc_feb9_roc();
 		String classifier_name= "";
 		String ensemble_tech = "";
 		String feature_selection_tech= "no-feature-selection";

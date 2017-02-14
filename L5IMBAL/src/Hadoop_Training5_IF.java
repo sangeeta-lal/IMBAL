@@ -155,7 +155,7 @@ public class Hadoop_Training5_IF
     //@Note: create this file using create_file_listing.py
 	/*
 	String folder_path = "";
-	String url = "jdbc:mysql://localhost:3307/";
+	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
 	String db_name ="logging5_imbal_rc_feb9";
 	String userName = "root"; 

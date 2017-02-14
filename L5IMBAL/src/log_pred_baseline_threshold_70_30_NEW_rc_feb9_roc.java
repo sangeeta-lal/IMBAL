@@ -45,7 +45,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
  *   2. smo.buildClassifier(train, cl1, cl2, **true**, -1, -1)
 
  * */
-public class log_pred_baseline_threshold_70_30_NEW
+public class log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc
 {
 
 	/*
@@ -65,6 +65,7 @@ public class log_pred_baseline_threshold_70_30_NEW
 	String driver = "com.mysql.jdbc.Driver";
 	//*/
 	 
+		 
 
 	int iterations=10;	
 	String type = "catch";
@@ -74,8 +75,9 @@ public class log_pred_baseline_threshold_70_30_NEW
 	//String source_project="cloudstack";	
 	//String source_project="hd";
 	
-	
 	String db_name ="logging5_imbal";
+	
+	
 	String result_table = "result_baseline_threshold_"+type;
 	//String result_table = "temp_threshold";
 
@@ -299,7 +301,14 @@ public Evaluation pred2_thres(Classifier model,  int itr)
 			recall[itr][thres_itr]= ut.compute_recall(tp, fp, tn, fn);
 			fmeasure[itr][thres_itr]=ut.compute_fmeasure(tp, fp, tn, fn);
 			accuracy[itr][thres_itr]=ut.compute_accuracy(tp, fp, tn, fn);
-			roc_auc[itr][thres_itr] =0.0;// call some method here if possible	
+			
+			// feb 9 starte
+			//@ old code: roc_auc[itr][thres_itr] =0.0;// call some method here if possible				
+			
+			evaluation.evaluateModel(model, tests);					
+			roc_auc[itr][thres_itr] = evaluation.areaUnderROC(1)*100;// call some method here if possible	
+			
+			// feb 9 end
 			
 			//System.out.println("precision ["+itr+"]["+thres_itr+"]="+ precision[itr][thres_itr]+ "  temp="+temp+ " thres= "+ thres + " tp="+ tp+ "  fp"+ fp +" fn="+fn+" tn="+tn);
 			 
@@ -464,7 +473,7 @@ public static void main(String args[])
 			  					new SMO()// SVM Classifier
 	                            };
 	 
-		log_pred_baseline_threshold_70_30_NEW clp = new log_pred_baseline_threshold_70_30_NEW();
+		log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc clp = new log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc();
 		
 		
 		// Length of models

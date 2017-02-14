@@ -62,6 +62,14 @@ public class log_pred_baseline_70_30
 	//*/
 	 
 
+	/*
+	String path = "D:\\Research\\L5IMBAL\\dataset\\";
+	String user_name =  "root";
+	String password = "1234";
+	String url = "jdbc:mysql://localhost:3306/";
+	String driver = "com.mysql.jdbc.Driver";
+	//*/
+
 	int iterations=10;	
 	//String type = "catch";
 	String type ="if";
@@ -71,7 +79,9 @@ public class log_pred_baseline_70_30
 	//String source_project="hd";
 	
 	
-	String db_name ="logging5_imbal";
+	//String db_name ="logging5_imbal";
+	
+	String db_name ="logging5_imbal_rc_feb9";
 	String result_table = "result_baseline_"+type;
 
 	
