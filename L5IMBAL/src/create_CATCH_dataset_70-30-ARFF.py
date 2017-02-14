@@ -55,7 +55,7 @@ train_file_path=path+project+"-arff\\catch\\"
 test_file_path = path+ project+"-arff\\catch\\"
 #"""
 
-# JIIT Server
+# JIIT Server #
 """
 port=3306
 user="root"
