@@ -57,7 +57,7 @@ public class log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc
 	  
 	// */
 	
-	///*
+	/*
 	String path = "F:\\Research\\L5IMBAL\\dataset\\";
 	String user_name =  "root";
 	String password = "1234";
@@ -65,7 +65,15 @@ public class log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc
 	String driver = "com.mysql.jdbc.Driver";
 	//*/
 	 
-		 
+	// jiit server
+	///*
+		String path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
+		String user_name =  "root";
+		String password = "1234";
+		String url = "jdbc:mysql://localhost:3306/";
+		String driver = "com.mysql.jdbc.Driver";
+		//*/
+			 
 
 	int iterations=10;	
 	String type = "catch";
@@ -75,7 +83,10 @@ public class log_pred_baseline_threshold_70_30_NEW_rc_feb9_roc
 	//String source_project="cloudstack";	
 	//String source_project="hd";
 	
-	String db_name ="logging5_imbal";
+	//String db_name ="logging5_imbal";
+	
+	String db_name ="logging5_imbal_rc_feb9";
+	
 	
 	
 	String result_table = "result_baseline_threshold_"+type;
