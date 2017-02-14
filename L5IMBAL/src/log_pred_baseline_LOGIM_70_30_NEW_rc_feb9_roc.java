@@ -77,6 +77,7 @@ public class log_pred_baseline_LOGIM_70_30_NEW_rc_feb9_roc
 	//*/
 	 
 
+	// jiit server
 	///*
 	String path = "D:\\Sangeeta\\Research\\L5IMBAL\\dataset\\";
 	String user_name =  "root";
